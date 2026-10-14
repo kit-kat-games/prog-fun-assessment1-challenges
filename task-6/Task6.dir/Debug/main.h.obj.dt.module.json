@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Task6.dir\\Debug\\main.obj",
+            "outputs": [
+                "Task6.dir\\Debug\\main.h.obj.dt.module.json",
+                "Task6.dir\\Debug\\main.h.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

@@ -23,7 +23,7 @@ These basic calculations, as well as data input/feedback will be extrapolated fu
 
 Programming Fundamentals - Assessment 1 - Task 3 Reflective Post
 
-This task was about doing different calculation metrics/types onto an inputted number, and outputting its result. However, its main component is the introduction of an input error handling. When we prompt the user for a number, we expect either an integer or a float (of any sign), and if either are given, the program functions correctly. However should any other data typed value be inputted, that std::cin attempt will fail, and we use this in order to produce an error statement for the operator, and return main with a custom error value.
+This task was about doing different calculation metrics/types onto an inputted number, and outputting its result. However, its main component is the introduction of an input error handling. When we prompt the user for a number, we expect either an integer or a float (of any sign), and if either are given, the program functions correctly. However should any other data typed value be inputted, that std::cin attempt will fail, and we use this in order to produce an error statement for the operator using std::cerr, and return main with a custom error value.
 
 I utilized StackOverflow in order to discover how to read if an inputted value is of the correct type. This is done by reading whether the last std::cin statement's failbit is true ( read through if (cin.fail()) ). If so, we use the conditional if statement to break away from the rest of program, and return the main function. This causes the rest of the program in the main function and beyond not to run.
 
@@ -35,3 +35,17 @@ Programming Fundamentals - Assessment 1 - Task 4 Reflective Post
 This task combined a few essential components of the previous tasks in order to make an ASCII art generator that requires proper data input, handling and std::cout formatting. It also brought into use the idea of a function from our prog-fun lecture/tutorial 5, in order to place the doASCIIArt process inside another function for more readability and a better logistical layout. As well as functions, this task required the use of lecture 3's conditional if, else if and else statements inside lecture 4's loops, where I specifically used both a while true loop (in order to have the doASCIIArt function called endlessly while the program is running), as well as a do while loop (a while loop that will always be run at least once).
 
 The application of so many previous skills allowed for refinement of their uses, helping me decide which solution would be more efficient for the current task and problem. This task's somewhat larger scale and greater variety of required features is helping me build up to larger projects, where the right solution may not be obvious at first read, and different procedures may need to be compared for their efficiency and use case.
+
+
+Programming Fundamentals - Assessment 1 - Task 5 Reflective Post
+
+This task used more advanced input handling (with ensuring that a non-empty string, with at least 1 alphabetical character is present in), as well as string functions in order to std::cout different cases of an inputted sentence. In order to do this, I once again used the do while loop solution, with std::cerr for specifically outputting the errors of whatever the user inputted.
+
+These cases were then made through the use of an iterating loop of [for (char letter : inputtedText)], as well as either the toupper() or tolower() function applied at the correct letters in the sentence. This included using Boolean switching (for example whether a letter is the first letter and should be capitalized) and application of conditional functions like isalnum(). These cases will be important in our text based game, as adding any depth to the terminal's output is required without many other ways to provide feedback to the user.
+
+
+Programming Fundamentals - Assessment 1 - Task 6 Reflective Post
+
+This task uses input handling to receive an integer value between 0-100, generate a random number within that range, and provide feedback to the user about how close their number is to the generated one. The user is repeatably prompted for numbers until they guess the random number, with the feedback intended to tell them whether they are further or closer to the number each guess.
+
+I handled this using a while (!gameOver) gameplay loop, with different functions within the loop in order to produce a better to handle program layout. 

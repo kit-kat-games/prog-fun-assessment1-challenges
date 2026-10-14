@@ -1,0 +1,37 @@
+Programming Fundamentals - Assessment 1 - Task 1 Reflective Post
+
+This task was about using std::cout while correctly formatting a given string in order to produce an ASCII art of a boat within the terminal. 
+
+I approached this problem by deciding the best way to format the output of the string, which initially was through the use many stacked "\n" characters and << operators within my std::cout statement. While this functions, it is not well formatted within the program itself, and could lead to flaws should the ASCII art wish to be viewed in the code, or changed to be outputted differently. 
+
+In order to improve the formatting and usability of this string, I used a form of string showed by Christopher Windmill in one of our lectures. He showcased using a Raw String Literal (formatted with R"()"). This allowed me to 'draw' the ASCII art within the program over the next few lines, and once the defined string literal variable is outputted with std::cout, it is formatted as I want without the excess use of newline operators and characters.
+
+Using this approach taught me that finding different versions of datatypes such as the string can be helpful in making the development and maintenance of the program better. This can be applied with using alternate versions of inbuilt datatypes, or using data structures like classes in order to expand inbuilt datatypes for further functionality.
+
+
+
+Programming Fundamentals - Assessment 1 - Task 2 Reflective Post
+
+This task was about using std::cin to receive data from the operator, calculate appropriate further player details from these values and then use std::cout in order to provide the operator feedback about their player data.
+
+Initially, I approached this problem using the standard formatting of std::cout and std::cin statements taught to us in the earlier prog-fun tutorials, as well as application of BODMAS and the repeated use of the << operator in the std::cout statement to output the feedback statements exactly as intended. However, on my first test use of this program, I realised that should the operator input a 2 word name/username/nametag, due to how std::cin works (reading the first word inputting in the terminal, not the whole line), that variable would only take the first word, and any leftover string would be inputted into the next std::cin operator.
+
+In order to avoid this issue, I used the #include <string> line at the top of the program, providing a greater amount of functionality with string input, and use within the program (this being one of the C++ standard library includes). This then allows me to use the function getline(cin, playerName) to read the whole inputted line, allowing for multiple word inputs to be received as I expected and needed them to.
+
+These basic calculations, as well as data input/feedback will be extrapolated further in our assessment 2 task when the system is required to utilise data transformation, with this acting as a good baseline for that, allowing me to get familiar with the inner procedures and syntax of C++ development.
+
+
+Programming Fundamentals - Assessment 1 - Task 3 Reflective Post
+
+This task was about doing different calculation metrics/types onto an inputted number, and outputting its result. However, its main component is the introduction of an input error handling. When we prompt the user for a number, we expect either an integer or a float (of any sign), and if either are given, the program functions correctly. However should any other data typed value be inputted, that std::cin attempt will fail, and we use this in order to produce an error statement for the operator, and return main with a custom error value.
+
+I utilized StackOverflow in order to discover how to read if an inputted value is of the correct type. This is done by reading whether the last std::cin statement's failbit is true ( read through if (cin.fail()) ). If so, we use the conditional if statement to break away from the rest of program, and return the main function. This causes the rest of the program in the main function and beyond not to run.
+
+This introduction of input error checking will be crucial in our other assessment, as we will need to ensure any inputted text is of the expected format, in order to prevent logic issues that may arise from invalid values being supplied or the lack of value that will be needed in the rest of the program.
+
+
+Programming Fundamentals - Assessment 1 - Task 4 Reflective Post
+
+This task combined a few essential components of the previous tasks in order to make an ASCII art generator that requires proper data input, handling and std::cout formatting. It also brought into use the idea of a function from our prog-fun lecture/tutorial 5, in order to place the doASCIIArt process inside another function for more readability and a better logistical layout. As well as functions, this task required the use of lecture 3's conditional if, else if and else statements inside lecture 4's loops, where I specifically used both a while true loop (in order to have the doASCIIArt function called endlessly while the program is running), as well as a do while loop (a while loop that will always be run at least once).
+
+The application of so many previous skills allowed for refinement of their uses, helping me decide which solution would be more efficient for the current task and problem. This task's somewhat larger scale and greater variety of required features is helping me build up to larger projects, where the right solution may not be obvious at first read, and different procedures may need to be compared for their efficiency and use case.

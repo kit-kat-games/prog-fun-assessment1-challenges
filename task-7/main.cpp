@@ -1,7 +1,10 @@
 /*
     Assessment 1 - Challenge 7
 	Task: Party Selection
-    
+    Prompts the user to create a party of 3 adventurers. The user is then prompted to choose and purchase weapons 
+        (represented by ShopItem structs), which once completed and confirmed, are outputted with a start message
+        for an adventurer
+    Uses maps, vectors and a custom struct for different methods of data input, handling and format
 */
 
 #include <iostream>
@@ -10,11 +13,7 @@
 #include <vector>
 using namespace std;
 
-int partyMemberCount = 3;
-vector<string> partyNames;
-int startingCoinCount = 100;
-int partyCoinCount;
-
+// Models the data shop items need
 struct ShopItem {
     string itemName;
     string itemType;
@@ -23,6 +22,19 @@ struct ShopItem {
     string characterRole;
 };
 
+// Party member variables
+int partyMemberCount = 3;
+vector<string> partyNames;
+
+// Coin variables
+int startingCoinCount = 100;
+int partyCoinCount;
+
+// Item variables
+vector<int> boughtShopItems = {};
+map<string, ShopItem> partyItems = {};
+
+// Define the given purchaseable shop items
 map<int, ShopItem> shopItems = {
     {1, ShopItem("Great Sword", "Sword", 40, 100, "Knight")},
     {2, ShopItem("Scimitar", "Sword", 35, 75, "Knight")},
@@ -32,13 +44,10 @@ map<int, ShopItem> shopItems = {
     {6, ShopItem("Rusty Spear", "Spear", 10, 35, "Spearman")},
     {7, ShopItem("Iron Spear", "Spear", 20, 65, "Spearman")},
 };
-vector<int> boughtShopItems = {};
-
-map<string, ShopItem> partyItems = {};
 
 vector<string> getPartyNames() {
+    // Prompt user to input names until they enter 3 valid names (can be changed by changing value of partyMemberCount)
     vector<string> names;
-    
     do {
 		string name;
         cout << " - Please enter player #" << names.size() + 1 << "'s name: ";
@@ -72,6 +81,7 @@ vector<string> getPartyNames() {
 }
 
 void ouputShopWelcomeMessage() {
+    // Formats shop welcome message based on inputted party names
     cout << "Welcome ";
     int namesPrinted = 0;
     for (string name : partyNames) {
@@ -89,6 +99,7 @@ void ouputShopWelcomeMessage() {
 }
 
 void outputShopItems() {
+    // Format the available items in the shop
     int itemNum = 1;
     for (const auto& [itemName, shopItem] : shopItems) {
         cout << itemNum << ". " << shopItem.itemName << " [" << shopItem.price << " coins, " 
@@ -99,6 +110,8 @@ void outputShopItems() {
 }
 
 bool letPlayersChooseItems() {
+    // Have the player input item choices until an item is chosen for each player (accounting for prices, single stock
+    // of each item, and handling feedback given to player about purchased weapons
     do {
         int chosenItemNumber = -1;
         cout << "Player " << partyItems.size() + 1 << ", please enter a weapon to buy: ";
@@ -143,9 +156,15 @@ bool letPlayersChooseItems() {
     } while (partyItems.size() < partyMemberCount);
     
     while (true) {
+        string input;
         string happyWithPurchases;
         cout << "Are you happy with your selection of weapons? {yes/no}: ";
-        getline(cin, happyWithPurchases);
+        // cin >> ws prevents duplication issues with how cin works
+        getline(cin >> ws, input);
+
+        for (char letter : input) {
+            happyWithPurchases += tolower(letter);
+        }
 
         if (happyWithPurchases == "yes") {
             return true;
@@ -161,6 +180,7 @@ int main(int argc, char* argv[])
 {
     partyNames = getPartyNames();
 
+    // Have the user purchase different items from the shop until they are happy with their purchases
     bool allItemsChosen = false;
     while (!allItemsChosen) {
         partyCoinCount = startingCoinCount;
@@ -169,6 +189,7 @@ int main(int argc, char* argv[])
         allItemsChosen = letPlayersChooseItems();
     }
 
+    cout << endl;
     cout << "The party:" << endl;
     for (int i = 0; i < partyNames.size(); i++) {
         string player = partyNames[i];

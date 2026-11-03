@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Task7.dir\\Debug\\inventory.obj",
+            "outputs": [
+                "Task7.dir\\Debug\\inventory.h.obj.dt.module.json",
+                "Task7.dir\\Debug\\inventory.h.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

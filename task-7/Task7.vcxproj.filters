@@ -9,5 +9,8 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{A5487F9D-31BA-3C2C-B75A-9B2B65E7E845}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{42cd2a5a-533f-4d5f-a7a5-2257d67491aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

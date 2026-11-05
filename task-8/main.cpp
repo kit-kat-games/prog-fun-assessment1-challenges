@@ -95,8 +95,10 @@ void clearInventory() {
 
 const vector<string> AVAILABLE_COMMANDS = { "view", "show_all", "set", "search_item", "items", "exit", "restart", "help", "clear" };
 const vector<string> COMMANDS_WITHOUT_SYNTAX = { "show_all", "items", "exit", "restart", "help", "clear" };
-const map<string, void> COMMAND_FUNCTION_MAP = {
-    {"view", viewItem},
+enum CommandExecutionResult {
+    COMMAND_COMPLETED,
+    COMMAND_FAILED,
+    EXIT_PROGRAM,
 };
 
 string getFirstWord(string str) {
@@ -107,6 +109,21 @@ string getFirstWord(string str) {
         }
         else {
             return result;
+        }
+    }
+    return result;
+}
+
+string getSyntaxPastFirstWord(string str) {
+    string result = "";
+    bool onFirstWord = true;
+    for (char c : str) {
+        if (!onFirstWord) {
+            result += c;
+            continue;
+        }
+        if (c == ' ') {
+            onFirstWord = false;
         }
     }
     return result;
@@ -124,24 +141,110 @@ bool isWithin(S searching, A structure) {
 
 bool isCommandCorrectSyntax(string input) {
     string command = getFirstWord(input);
+    string syntax = getSyntaxPastFirstWord(input);
     if (!isWithin(command, AVAILABLE_COMMANDS)) {
         return false;
     }
     if (isWithin(command, COMMANDS_WITHOUT_SYNTAX)) {
         return true;
     }
+    if (syntax == "") {
+        return false;
+    }
+
+    if (command == "view") {
+        bool seenFirstNum = false;
+        bool onFirstNum = false;
+        for (char c : syntax) {
+            if (onFirstNum && c == ' ' && seenFirstNum) {
+                onFirstNum = false;
+            }
+            if (!seenFirstNum && isdigit(c)) {
+                seenFirstNum = true;
+                onFirstNum = true;
+            }
+            if (!onFirstNum && isdigit(c)) {
+                cout << "Nuh uh" << endl;
+                return false;
+            }
+            if (!isdigit(c) && c != ' ') {
+                cout << "Nuh uh" << endl;
+                return false;
+            }
+        }
+        int viewNum = stoi(syntax);
+        if (viewNum <= 0 || viewNum > INVENTORY_SIZE_LIMIT) {
+            return false;
+        }
+    }
+    else if (command == "set") {
+        for (char c : syntax) {
+            if (!isdigit(c)) {
+                cout << "Nuh uh" << endl;
+                return false;
+            }
+        }
+        int setIndex;
+        int itemID;
+    }
+    else if (command == "search_item") {
+        bool onFirstSyntaxWord = true;
+        for (char c : syntax) {
+            if (c == ' ') {
+                onFirstSyntaxWord = false;
+            }
+            if (isalnum(c) && !onFirstSyntaxWord) {
+                cout << "Nuh uh" << endl;
+                return false;
+            }
+        }
+    }
+    cout << "Yeh uh" << endl;
+    return true;
 }
 
-void doCommand(string input) {
+CommandExecutionResult doCommand(string input) {
+    if (!isCommandCorrectSyntax(input)) {
+        return COMMAND_FAILED;
+    }
+    string command = getFirstWord(input);
+    if (command == "view") {
 
+    }
+    else if (command == "show_all") {
+
+    }
+    else if (command == "set") {
+
+    }
+    else if (command == "search_item") {
+
+    }
+    else if (command == "items") {
+
+    }
+    else if (command == "exit") {
+        return EXIT_PROGRAM;
+    }
+    else if (command == "restart") {
+
+    }
+    else if (command == "help") {
+
+    }
+    else if (command == "clear") {
+
+    }
+    return COMMAND_COMPLETED;
 }
 
 int main(int argc, char* argv[])
 {
+    string input;
     initializeInventorySize();
     cout << " >> Type 'help' for a list of all commands. Otherwise, please enter a command in lower case only." << endl;
     while (true) {
-        string input;
+        input = "";
         do {
             cout << " - ";
             getline(cin, input);
@@ -151,6 +254,14 @@ int main(int argc, char* argv[])
             else {
                 if (!isCommandCorrectSyntax(input)) {
                     cerr << " [!] ERROR: Invalid command detected. Incorrect syntax or unknown command. Type 'help' for a list of all commands." << endl;
+                    continue;
+                }
+                CommandExecutionResult commandResult = doCommand(input);
+                if (commandResult == COMMAND_FAILED) {
+                    cerr << " [!] ERROR: Command failed." << endl;
+                }
+                else if (commandResult == EXIT_PROGRAM) {
+                    return 0;
                 }
             }
         } while (input.length() == 0);

@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Task9.dir\\Debug\\Vector2.obj",
+            "outputs": [
+                "Task9.dir\\Debug\\Vector2.h.obj.dt.module.json",
+                "Task9.dir\\Debug\\Vector2.h.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

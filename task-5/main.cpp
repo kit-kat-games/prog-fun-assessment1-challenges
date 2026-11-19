@@ -50,7 +50,7 @@ void doTextCasing() {
     string sentenceCaseText;
     bool isFirstCharacter = true;
     for (char letter : inputtedText) {
-        if (isFirstCharacter && letter != ' ') {
+        if (isFirstCharacter && !isspace(c)) {
             sentenceCaseText += toupper(letter);
             isFirstCharacter = false;
         }

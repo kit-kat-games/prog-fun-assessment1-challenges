@@ -1,51 +1,131 @@
-Programming Fundamentals - Assessment 1 - Task 1 Reflective Post
+Challenge Reflections:
 
-This task was about using std::cout while correctly formatting a given string in order to produce an ASCII art of a boat within the terminal. 
+Challenge 1 - Reflection
+Context:
+This challenge asks me to build an application that uses std::cout to print out a given boat ASCII art. This involved using the std::cout methods for printing to the terminal, and a string holding the ascii art of the boat. From the lectures/tutorials, I already knew how to use the <iostream> standard methods (where std::cout is from).
 
-I approached this problem by deciding the best way to format the output of the string, which initially was through the use many stacked "\n" characters and << operators within my std::cout statement. While this functions, it is not well formatted within the program itself, and could lead to flaws should the ASCII art wish to be viewed in the code, or changed to be outputted differently. 
+Action:
+Due to being a very simple problem, all I was required to do was find a way to represent the boat and then output this to the terminal. One way of doing this is through a series of std::cout statements outputting each individual line one by one to the terminal, separated by '\n' (newline/std::endl's). However, I decided instead to use a "R-String", also known as an raw string, represented by:
+	std::string myBoat = R"(
+/////////
+/////////
+/////////
+)";
+Where the '/' characters represent the space where the ASCII art is stored. I decided to use this approach as it would allow me to only use a single std::cout statement, by storing the boat art in a single string. I could alternatively have used a standard string which would follow the lines of:
+	std::string myBoat = "/////////\n/////////\n/////////\n";
+I chose to use the raw string approach, as c++ automatically formats in the newline (\n) characters to match what is written within the program itself. This allowed me to create the ASCII art within the code block, and have a visual representation of what would be outputted into the terminal.
 
-In order to improve the formatting and usability of this string, I used a form of string showed by Christopher Windmill in one of our lectures. He showcased using a Raw String Literal (formatted with R"()"). This allowed me to 'draw' the ASCII art within the program over the next few lines, and once the defined string literal variable is outputted with std::cout, it is formatted as I want without the excess use of newline operators and characters.
+I learnt of raw strings from my lecturer where he suggested the use for an in-tutorial task.
 
-Using this approach taught me that finding different versions of datatypes such as the string can be helpful in making the development and maintenance of the program better. This can be applied with using alternate versions of inbuilt datatypes, or using data structures like classes in order to expand inbuilt datatypes for further functionality.
+Results:
+This use of an R-String worked successfully, and due to the simplicity of the problem, I did not encounter any issues when running my solution.
 
-
-
-Programming Fundamentals - Assessment 1 - Task 2 Reflective Post
-
-This task was about using std::cin to receive data from the operator, calculate appropriate further player details from these values and then use std::cout in order to provide the operator feedback about their player data.
-
-Initially, I approached this problem using the standard formatting of std::cout and std::cin statements taught to us in the earlier prog-fun tutorials, as well as application of BODMAS and the repeated use of the << operator in the std::cout statement to output the feedback statements exactly as intended. However, on my first test use of this program, I realised that should the operator input a 2 word name/username/nametag, due to how std::cin works (reading the first word inputting in the terminal, not the whole line), that variable would only take the first word, and any leftover string would be inputted into the next std::cin operator.
-
-In order to avoid this issue, I used the #include <string> line at the top of the program, providing a greater amount of functionality with string input, and use within the program (this being one of the C++ standard library includes). This then allows me to use the function getline(cin, playerName) to read the whole inputted line, allowing for multiple word inputs to be received as I expected and needed them to.
-
-These basic calculations, as well as data input/feedback will be extrapolated further in our assessment 2 task when the system is required to utilise data transformation, with this acting as a good baseline for that, allowing me to get familiar with the inner procedures and syntax of C++ development.
-
-
-Programming Fundamentals - Assessment 1 - Task 3 Reflective Post
-
-This task was about doing different calculation metrics/types onto an inputted number, and outputting its result. However, its main component is the introduction of an input error handling. When we prompt the user for a number, we expect either an integer or a float (of any sign), and if either are given, the program functions correctly. However should any other data typed value be inputted, that std::cin attempt will fail, and we use this in order to produce an error statement for the operator using std::cerr, and return main with a custom error value.
-
-I utilized StackOverflow in order to discover how to read if an inputted value is of the correct type. This is done by reading whether the last std::cin statement's failbit is true ( read through if (cin.fail()) ). If so, we use the conditional if statement to break away from the rest of program, and return the main function. This causes the rest of the program in the main function and beyond not to run.
-
-This introduction of input error checking will be crucial in our other assessment, as we will need to ensure any inputted text is of the expected format, in order to prevent logic issues that may arise from invalid values being supplied or the lack of value that will be needed in the rest of the program.
+Learning:
+I will continue to apply the use of R-Strings (raw strings) in most cases where ASCII is needed, as it makes constructing them, storing them and referencing them within the program much easier.
 
 
-Programming Fundamentals - Assessment 1 - Task 4 Reflective Post
+Challenge 2 - Reflection
+Context:
+This challenge asks to build an application which prompts the user for in-game details including name, username, clan tag and current xp number. It then uses input checking to ensure that the inputted data is valid. This application of input checking is the first time I have encountered such a process in c++, and thus I will be learning how to
+properly do it in order to account for all edge cases of input. I expect this collection of number input to be the most difficult due to having previous issues with cin within my tutorial tasks.
 
-This task combined a few essential components of the previous tasks in order to make an ASCII art generator that requires proper data input, handling and std::cout formatting. It also brought into use the idea of a function from our prog-fun lecture/tutorial 5, in order to place the doASCIIArt process inside another function for more readability and a better logistical layout. As well as functions, this task required the use of lecture 3's conditional if, else if and else statements inside lecture 4's loops, where I specifically used both a while true loop (in order to have the doASCIIArt function called endlessly while the program is running), as well as a do while loop (a while loop that will always be run at least once).
+Action:
+I broke the problem down into 3 steps:
+Data Collection
+Data Manipulation
+Data Output
 
-The application of so many previous skills allowed for refinement of their uses, helping me decide which solution would be more efficient for the current task and problem. This task's somewhat larger scale and greater variety of required features is helping me build up to larger projects, where the right solution may not be obvious at first read, and different procedures may need to be compared for their efficiency and use case.
+Data Collection for the string variables involved prompting the user with a std::cout statement for what the program expects to recieve next, using getline(cin, stringVarName) to receive terminal input and then putting the inputted text through the following checks:
+Checking if the string is empty - If so, output an 'error' message, and prompt the user for input again
+Checking each character in the input, and checking whether any are non spaces. If every character is a space, this is counted as invalid and an 'error' message is also outputted, with the user prompted once again. If any character is not a space, we allow the input and continue onto the next variable prompt.
+
+Data Collection for the int variable involved making a temporary string variable that I plan to parse through and ensure it is valid. I chose to use a temporary string variable due to encountering issues when the user would input strings, nothing, or just space characters into the cin prompt. This causes issues that are not consistent between the three of them when attempting to handle the failing input, and thus I believed parsing through the input myself would be the best catch-all solution. This involved using Booleans and looping through the inputted string to ensure there is only a single number present, with no spaces between digits, (no minus signs or decimal points as the number must end up as an unsigned int), but allowing for spaces before and after any present number. Should any invalidity be encountered during parsing, an error message is outputted, and the user is prompted again. If the parsing identifies the input as valid, it is then converted to an integer, and then used in the later steps.
+
+Data Manipulation includes taking the inputted valid data and transforming it into further data we will need to provide the user in the Data Output step. This includes calculating what current level the user is at and deciding the remaining xp points to the next level. For this, I used integer division as it allows me to automatically truncate the value gained by playerXPPoints / xpPerLevel. For example, with 358 XP and 100 xpPerLevel, the result would be 3.58, which is converted to 3 through integer division. I chose to use integer division over manually flooring the value due to it being able to be automatically handled through the division, which reduces the amount of processes, and thus bloat in my program.
+
+Data Output then included outputting this data in the exact format that the assessment required. This involved using simple std::cout (or cout, as I was using namespace std) statements as well as the << operator to properly format the terminal text.
+
+Results:
+The input parsing employed in the Data Collection step took a few iterations of solutions to work correctly, however at this point, it works correctly under any edge cases I have given it. It was unexpected the amount of issues I would face when trying to simply use the cin method when trying to input data and check it, however I was able to resolve said issues. I imagine should I research this further, there may be a more efficient or simpler solution to this problem, however given my current knowledge in c++, this is the most appropriate method I have found.
+
+Learning:
+This task has allowed me to understand how cin, input parsing and error checking works within a program, as well as the difficulties encountered in doing so. The solutions I designed within this program will likely be very helpful in reusing them within further tasks inside this assessment, my tutorials, and any other c++ projects. I also imagine a similar solution to input parsing could be applied to Task 8 where parsing a command for correct syntax within its command and variables is very important for proper function.
+
+Challenge 3 - Reflection
+Context:
+
+Action:
+
+Results:
+
+Learning:
 
 
-Programming Fundamentals - Assessment 1 - Task 5 Reflective Post
+Challenge 4 - Reflection
+Context:
 
-This task used more advanced input handling (with ensuring that a non-empty string, with at least 1 alphabetical character is present in), as well as string functions in order to std::cout different cases of an inputted sentence. In order to do this, I once again used the do while loop solution, with std::cerr for specifically outputting the errors of whatever the user inputted.
+Action:
 
-These cases were then made through the use of an iterating loop of [for (char letter : inputtedText)], as well as either the toupper() or tolower() function applied at the correct letters in the sentence. This included using Boolean switching (for example whether a letter is the first letter and should be capitalized) and application of conditional functions like isalnum(). These cases will be important in our text based game, as adding any depth to the terminal's output is required without many other ways to provide feedback to the user.
+Results:
+
+Learning:
 
 
-Programming Fundamentals - Assessment 1 - Task 6 Reflective Post
+Challenge 5 - Reflection
+Context:
 
-This task uses input handling to receive an integer value between 0-100, generate a random number within that range, and provide feedback to the user about how close their number is to the generated one. The user is repeatably prompted for numbers until they guess the random number, with the feedback intended to tell them whether they are further or closer to the number each guess.
+Action:
 
-I handled this using a while (!gameOver) gameplay loop, with different functions within the loop in order to produce a better to handle program layout. 
+Results:
+
+Learning:
+
+
+Challenge 6 - Reflection
+Context:
+
+Action:
+
+Results:
+
+Learning:
+
+
+Challenge 7 - Reflection
+Context:
+
+Action:
+
+Results:
+
+Learning:
+
+
+Challenge 8 - Reflection
+Context:
+
+Action:
+
+Results:
+
+Learning:
+
+
+Challenge 9 - Reflection
+Context:
+
+Action:
+
+Results:
+
+Learning:
+
+
+Challenge 10 - Reflection
+Context:
+
+Action:
+
+Results:
+
+Learning:

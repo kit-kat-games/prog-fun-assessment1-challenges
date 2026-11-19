@@ -1,7 +1,8 @@
 /*
     Assessment 1 - Challenge 8
     Task: Dynamic Inventory
-    
+    Uses a menu like system to prompt the user for a series of commands to manipulate a dynamic inventory. Allows setting a size for the inventory, setting, viewing and clearing items as well
+        as providing proper feedback errors on the issues with any user-inputted feedback.
 */
 
 #include <iostream>
@@ -15,11 +16,15 @@ const int INVENTORY_SIZE_LIMIT = 16;
 enum CommandExecutionResult { EXECUTIONRESULT_COMMANDCOMPLETED, EXECUTIONRESULT_COMMANDFAILED };
 enum CommandFailReason { FAILREASON_DIDNOTFAIL, FAILREASON_INVALIDITEMID, FAILREASON_INVALIDSLOTINDEX, FAILREASON_INVALIDSYNTAX };
 enum CommandFinishRequest { FINISHREQUEST_NA, FINISHREQUEST_RESTARTSESSION, FINISHREQUEST_EXITPROGRAM };
-enum CommandSyntaxError { SYNTAXERROR_NA, SYNTAXERROR_INVALIDITEMID, SYNTAXERROR_INVALIDSLOTINDEX, SYNTAXERROR_INVALIDVARCOUNT };
+enum CommandSyntaxError { SYNTAXERROR_NA, SYNTAXERROR_INVALIDITEMID, SYNTAXERROR_INVALIDSLOTINDEX, SYNTAXERROR_INVALIDCOMMAND, SYNTAXERROR_INVALIDVARCOUNT, SYNTAXERROR_INVALIDVARTYPE };
 struct CommandResult {
     CommandExecutionResult executionResult;
     CommandFailReason failReason = FAILREASON_DIDNOTFAIL;
     CommandFinishRequest finishRequest = FINISHREQUEST_NA;
+};
+struct SyntaxResult {
+    bool validSyntax;
+    CommandSyntaxError syntaxError = SYNTAXERROR_NA;
 };
 
 struct InventoryItem {
@@ -68,7 +73,7 @@ void initializeInventorySize();
 string getCommand(string str) {
     string result = "";
     for (char c : str) {
-        if (c != ' ') {
+        if (!isspace(c)) {
             result += tolower(c);
         }
         else {
@@ -86,7 +91,7 @@ string getSyntax(string str) {
             result += tolower(c);
             continue;
         }
-        if (c == ' ') {
+        if (isspace(c)) {
             onFirstWord = false;
         }
     }
@@ -98,10 +103,10 @@ int countSyntaxVars(string syntax) {
     char lastC = ' ';
     bool seenAVar = false;
     for (char c : syntax) {
-        if (c != ' ' && !seenAVar) {
+        if (!isspace(c) && !seenAVar) {
             seenAVar = true;
         }
-        if (lastC == ' ' && c != lastC && seenAVar) {
+        if (isspace(lastC) && c != lastC && seenAVar) {
             count++;
         }
         lastC = c;
@@ -121,14 +126,14 @@ vector<string> splitSyntaxVars(string syntax, int expectedSyntaxCount) {
 
     int x = 0;
     for (char c : syntax) {
-        if (c != ' ' && !seenXthWord[x]) {
+        if (!isspace(c) && !seenXthWord[x]) {
             seenXthWord[x] = true;
             onXthWord[x] = true;
         }
-        if (c != ' ' && onXthWord[x]) {
+        if (!isspace(c) && onXthWord[x]) {
             result[x] += c;
         }
-        if (c == ' ' && onXthWord[x]) {
+        if (isspace(c) && onXthWord[x]) {
             onXthWord[x] = false;
             if (x == expectedSyntaxCount - 1) {
                 return result;
@@ -241,6 +246,7 @@ void showHelpInfo() {
 void clearInventory() {
     cout << " >> Cleared inventory." << endl;
     initializeInventorySize(); 
+    cout << " >> Type 'help' for a list of all commands. Otherwise, please enter a command in lower case only." << endl;
 }
 
 // Session Functions -------------------------------
@@ -250,22 +256,54 @@ void initializeInventorySize() {
     }
 
     int size = 0;
-    while (size < 1 || size > INVENTORY_SIZE_LIMIT) {
+    string input;
+    do {
+        bool validInput = true;
         cout << " - Please enter your inventory size: ";
-        cin >> size;
+        getline(cin, input);
 
-        if (cin.fail()) {
+        bool seenMinusSign = false; bool seenNum = false; bool onNum = false;
+        // Checks that there is a single integer value within the string, with availability for spaces before
+        // and after the number
+        for (char c : input) {
+            // If already proven invalid, do not need to check any further characters
+            if (!validInput) { continue; }
+            // If any invalid characters within
+            else if (!isdigit(c) && !isspace(c) && c != '-') { validInput = false; }
+            // If any digits present after the number finishes
+            else if (isdigit(c) && seenNum && !onNum) { validInput = false; }
+            // If multiple minus signs present
+            else if (c == '-' && seenMinusSign) { validInput = false; }
+            // If a minus sign present anywhere after the start of the num
+            else if (c == '-' && seenNum) { validInput = false; }
+            // If there is a space between a minus sign and the number
+            else if (isspace(c) && seenMinusSign && !seenNum) { validInput = false; }
+
+            // Seeing a valid minus sign
+            else if (c == '-' && !seenMinusSign && !seenNum) { seenMinusSign = true; }
+            // Entering the start of the number
+            else if (isdigit(c) && !seenNum) { seenNum = true; onNum = true; }
+            // Leaving the end of the number
+            else if (isspace(c) && onNum) { onNum = false; }
+        }
+
+        if (!validInput || !seenNum) {
             cerr << " [!] ERROR: Invalid input. That is not an integer." << endl;
-            cin.clear();
-            cin.ignore();
-            cin.ignore(INT_MAX, '\n');
+            input = "";
         }
-        else if (size == 0 || size > INVENTORY_SIZE_LIMIT) {
-            cerr << " [!] ERROR: Invalid inventory size. Please choose a size between 1 and " << int(INVENTORY_SIZE_LIMIT) << "." << endl;
+        else {
+            string numString;
+            for (char c : input) {
+                if (isdigit(c)) { numString += c; }
+            }
+            size = stoi(numString);
+            if (seenMinusSign) { size *= -1; }
+            if (size < 1 || size > INVENTORY_SIZE_LIMIT) {
+                cerr << " [!] ERROR: Invalid inventory size. Please choose a size between 1 and " << int(INVENTORY_SIZE_LIMIT) << "." << endl;
+                input = "";
+            }
         }
-    }
-    // Clears the cin stream for later use
-    cin.ignore();
+    } while (input == "");
 
     cout << " >> Initialized inventory with size " << size << "." << endl;
 
@@ -275,46 +313,46 @@ void initializeInventorySize() {
     }
 }
 
-bool isCommandCorrectSyntax(string input) {
+SyntaxResult isCommandCorrectSyntax(string input) {
     string command = getCommand(input);
     string syntax = getSyntax(input);
     if (!isWithin(command, AVAILABLE_COMMANDS)) {
-        return false;
+        return SyntaxResult(false, SYNTAXERROR_INVALIDCOMMAND);
     }
     if (isWithin(command, COMMANDS_WITHOUT_SYNTAX)) {
-        return true;
+        return SyntaxResult(true);
     }
     if (syntax == "") {
-        return false;
+        return SyntaxResult(false, SYNTAXERROR_INVALIDVARCOUNT);
     }
 
     if (command == "view") {
         for (char c : syntax) {
-            if (!isdigit(c) && c != ' ') {
-                return false;
+            if (!isdigit(c) && !isspace(c)) {
+                return SyntaxResult(false, SYNTAXERROR_INVALIDVARTYPE);
             }
         }
 
         int syntaxVarCount = countSyntaxVars(syntax);
         if (syntaxVarCount != 1) {
-            return false;
+            return SyntaxResult(false);
         }
         vector<string> syntaxVars = splitSyntaxVars(syntax, 1);
         int viewNum = stoi(syntaxVars[0]);
         if (!isWithinInventoryIndexBounds(viewNum)) {
-            return false;
+            return SyntaxResult(false, SYNTAXERROR_INVALIDSLOTINDEX);
         }
     }
     else if (command == "set") {
         for (char c : syntax) {
-            if (!isdigit(c) && c != ' ') {
-                return false;
+            if (!isdigit(c) && !isspace(c)) {
+                return SyntaxResult(false, SYNTAXERROR_INVALIDVARTYPE);
             }
         }
 
         int syntaxVarCount = countSyntaxVars(syntax);
         if (syntaxVarCount != 2) {
-            return false;
+            return SyntaxResult(false, SYNTAXERROR_INVALIDVARCOUNT);
         }
 
         vector<string> syntaxVars = splitSyntaxVars(syntax, 2);
@@ -324,23 +362,45 @@ bool isCommandCorrectSyntax(string input) {
         int itemID = stoi(itemIDStr);
 
         if (!isWithinInventoryIndexBounds(setIndex)) {
-            return false;
+            return SyntaxResult(false, SYNTAXERROR_INVALIDSLOTINDEX);
         }
         if (!items.contains(itemID)) {
-            return false;
+            return SyntaxResult(false, SYNTAXERROR_INVALIDITEMID);
         }
     }
     else if (command == "search_item") {
         int syntaxVarCount = countSyntaxVars(syntax);
         if (syntaxVarCount != 1) {
-            return false;
+            return SyntaxResult(false, SYNTAXERROR_INVALIDVARCOUNT);
         }
     }
-    return true;
+    return SyntaxResult(true);
+}
+
+void printSyntaxError(CommandSyntaxError syntaxError) {
+    switch (syntaxError) {
+    case SYNTAXERROR_INVALIDCOMMAND:
+        cerr << " [!] ERROR: Invalid command." << endl;
+        break;
+    case SYNTAXERROR_INVALIDITEMID:
+        cerr << " [!] ERROR: Invalid item index." << endl;
+        break;
+    case SYNTAXERROR_INVALIDSLOTINDEX:
+        cerr << " [!] ERROR: Invalid slot index." << endl;
+        break;
+    case SYNTAXERROR_INVALIDVARCOUNT:
+        cerr << " [!] ERROR: Invalid number of variables." << endl;
+        break;
+    case SYNTAXERROR_INVALIDVARTYPE:
+        cerr << " [!] ERROR: Invalid datatypes of variables." << endl;
+        break;
+    }
 }
 
 CommandResult doCommand(string input) {
-    if (!isCommandCorrectSyntax(input)) {
+    SyntaxResult syntaxResult = isCommandCorrectSyntax(input);
+    if (!syntaxResult.validSyntax) {
+        printSyntaxError(syntaxResult.syntaxError);
         return CommandResult(EXECUTIONRESULT_COMMANDFAILED, FAILREASON_INVALIDSYNTAX);
     }
 
@@ -350,7 +410,6 @@ CommandResult doCommand(string input) {
     if (command == "view") {
         vector<string> syntaxVars = splitSyntaxVars(syntax, 1);
         int viewNum = stoi(syntaxVars[0]);
-
         viewItem(viewNum);
     }
     else if (command == "show_all") {
@@ -401,18 +460,14 @@ int main(int argc, char* argv[])
                 cerr << " [!] ERROR: Invalid input detected." << endl;
             }
             else {
-                if (!isCommandCorrectSyntax(input)) {
-                    cout << "Nuh uh" << endl;
-                    cerr << " [!] ERROR: Invalid command detected. Incorrect syntax or unknown command. Type 'help' for a list of all commands." << endl;
+                SyntaxResult syntaxResult = isCommandCorrectSyntax(input);
+                if (!syntaxResult.validSyntax) {
+                    printSyntaxError(syntaxResult.syntaxError);
                     continue;
                 }
-                cout << "Yuh uh" << endl;
                 CommandResult commandResult = doCommand(input);
                 if (commandResult.executionResult == EXECUTIONRESULT_COMMANDFAILED) {
-                    if (commandResult.failReason == FAILREASON_INVALIDSYNTAX) {
-                        cerr << " [!] ERROR: Command failed. Incorrect syntax or unknown command. Type 'help' for a list of all commands." << endl;
-                    }
-                    else if (commandResult.failReason == FAILREASON_INVALIDITEMID) {
+                    if (commandResult.failReason == FAILREASON_INVALIDITEMID) {
                         cerr << " [!] ERROR: Command failed. Invalid item id chosen." << endl;
                     }
                     else if (commandResult.failReason == FAILREASON_INVALIDSLOTINDEX) {

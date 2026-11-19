@@ -10,21 +10,62 @@
 #include <string>
 using namespace std;
 
+const int LOWER_BOUND = 0;
+const int UPPER_BOUND = 100;
+
 int takeNumInput() {
     // Have inputNum default to a number outside of range - Makes do while loop run until a correct input
     // is given. If this was 0, if a string was inputted, the cin would fail, but the inputNum would be used
     // in the rest of the programm with a value of 0 or cause loop errors
     int inputNum = -1;
+    string input;
     do {
+        bool validInput = true;
         cout << " - Please enter a number between 0-100: ";
-        cin >> inputNum;
-        if (cin.fail()) {
-            cerr << "ERROR: That is not an integer." << endl;
+        getline(cin, input);
+
+        bool seenMinusSign = false; bool seenNum = false; bool onNum = false;
+        // Checks that there is a single integer value within the string, with availability for spaces before
+        // and after the number
+        for (char c : input) {
+            // If already proven invalid, do not need to check any further characters
+            if (!validInput) { continue; }
+            // If any invalid characters within
+            else if (!isdigit(c) && !isspace(c) && c != '-') { validInput = false; }
+            // If any digits present after the number finishes
+            else if (isdigit(c) && seenNum && !onNum) { validInput = false; }
+            // If multiple minus signs present
+            else if (c == '-' && seenMinusSign) { validInput = false; }
+            // If a minus sign present anywhere after the start of the num
+            else if (c == '-' && seenNum) { validInput = false; }
+            // If there is a space between a minus sign and the number
+            else if (isspace(c) && seenMinusSign && !seenNum) { validInput = false; }
+
+            // Seeing a valid minus sign
+            else if (c == '-' && !seenMinusSign && !seenNum) { seenMinusSign = true; }
+            // Entering the start of the number
+            else if (isdigit(c) && !seenNum) { seenNum = true; onNum = true; }
+            // Leaving the end of the number
+            else if (isspace(c) && onNum) { onNum = false; }
         }
-        else if (inputNum < 0 || inputNum > 100) {
-            cerr << "ERROR: That number is out of bounds." << endl;
+
+        if (!validInput || !seenNum) {
+            cout << "ERROR: That is not an integer." << endl;
+            input = "";
         }
-    } while (inputNum < 0 || inputNum > 100);
+        else {
+            string numString;
+            for (char c : input) {
+                if (isdigit(c)) { numString += c; }
+            }
+            inputNum = stoi(numString);
+            if (seenMinusSign) { inputNum *= -1; }
+            if (inputNum < LOWER_BOUND || inputNum > UPPER_BOUND) {
+                cerr << "ERROR: That number is out of bounds." << endl;
+                input = "";
+            }
+        }
+    } while (input == "");
     return inputNum;
 }
 
@@ -61,7 +102,7 @@ void outputDifferenceHint(int inputNum, int targetNum) {
 int main(int argc, char* argv[])
 {
     // Decide random number, output for debug
-    int randNum = random(0, 100);
+    int randNum = random(LOWER_BOUND, UPPER_BOUND);
     cout << "For Debugging, the random number is: " << randNum << endl;
 
     // Game loop - Put logic in outside functions for more readability and better layout

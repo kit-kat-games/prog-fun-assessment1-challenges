@@ -45,6 +45,59 @@ map<int, ShopItem> shopItems = {
     {7, ShopItem("Iron Spear", "Spear", 20, 65, "Spearman")},
 };
 
+int getShopItemChoice(string inputRequest) {
+    int chosenItemNumber = -1;
+    string input;
+    do {
+        bool validInput = true;
+        cout << inputRequest;
+        getline(cin, input);
+
+        bool seenMinusSign = false; bool seenNum = false; bool onNum = false;
+        // Checks that there is a single integer value within the string, with availability for spaces before
+        // and after the number
+        for (char c : input) {
+            // If already proven invalid, do not need to check any further characters
+            if (!validInput) { continue; }
+            // If any invalid characters within
+            else if (!isdigit(c) && !isspace(c) && c != '-') { validInput = false; }
+            // If any digits present after the number finishes
+            else if (isdigit(c) && seenNum && !onNum) { validInput = false; }
+            // If multiple minus signs present
+            else if (c == '-' && seenMinusSign) { validInput = false; }
+            // If a minus sign present anywhere after the start of the num
+            else if (c == '-' && seenNum) { validInput = false; }
+            // If there is a space between a minus sign and the number
+            else if (isspace(c) && seenMinusSign && !seenNum) { validInput = false; }
+
+            // Seeing a valid minus sign
+            else if (c == '-' && !seenMinusSign && !seenNum) { seenMinusSign = true; }
+            // Entering the start of the number
+            else if (isdigit(c) && !seenNum) { seenNum = true; onNum = true; }
+            // Leaving the end of the number
+            else if (isspace(c) && onNum) { onNum = false; }
+        }
+
+        if (!validInput || !seenNum) {
+            cerr << "ERROR: That is not a number." << endl;
+            input = "";
+        }
+        else {
+            string numString;
+            for (char c : input) {
+                if (isdigit(c)) { numString += c; }
+            }
+            chosenItemNumber = stoi(numString);
+            if (seenMinusSign) { chosenItemNumber *= -1; }
+            if (chosenItemNumber < 1 || chosenItemNumber > shopItems.size()) {
+                cerr << "ERROR: Please choose a valid item number." << endl;
+                input = "";
+            }
+        }
+    } while (input == "");
+    return chosenItemNumber;
+}
+
 vector<string> getPartyNames() {
     // Prompt user to input names until they enter 3 valid names (can be changed by changing value of partyMemberCount)
     vector<string> names;
@@ -112,19 +165,9 @@ void outputShopItems() {
 bool letPlayersChooseItems() {
     // Have the player input item choices until an item is chosen for each player (accounting for prices, single stock
     // of each item, and handling feedback given to player about purchased weapons
-    do {
-        int chosenItemNumber = -1;
-        cout << "Player " << partyItems.size() + 1 << ", please enter a weapon to buy: ";
-        cin >> chosenItemNumber;
 
-        if (cin.fail()) {
-            cerr << "ERROR: That is not a number." << endl;
-            continue;
-        }
-        else if (chosenItemNumber < 1 || chosenItemNumber > shopItems.size()) {
-            cerr << "ERROR: Please choose a valid item number." << endl;
-            continue;
-        }
+    do {
+        int chosenItemNumber = getShopItemChoice("Player " + to_string(partyItems.size() + 1) + ", please enter a weapon to buy: ");
 
         ShopItem selectedItem = shopItems[chosenItemNumber];
 
@@ -151,8 +194,6 @@ bool letPlayersChooseItems() {
 
         // Store item and player name for later access
         partyItems.insert_or_assign(partyNames[partyItems.size()], selectedItem);
-        
-
     } while (partyItems.size() < partyMemberCount);
     
     while (true) {
@@ -170,6 +211,8 @@ bool letPlayersChooseItems() {
             return true;
         }
         else if (happyWithPurchases == "no") {
+            boughtShopItems.clear();
+            partyItems.clear();
             return false;
         }
     }

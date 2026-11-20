@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "task10.dir\\Debug\\methods.h.obj.dt.obj",
+            "outputs": [
+                "task10.dir\\Debug\\methods.h.obj.dt.module.json",
+                "task10.dir\\Debug\\methods.h.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

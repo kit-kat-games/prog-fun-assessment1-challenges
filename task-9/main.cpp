@@ -1,229 +1,263 @@
 /*
-    Assessment 1 - Challenge 8
-    Task: Dynamic Inventory
-    Uses a menu like system to prompt the user for a series of commands to manipulate a dynamic inventory. Allows setting a size for the inventory, setting, viewing and clearing items as well
-        as providing proper feedback errors on the issues with any user-inputted feedback.
+    Assessment 1 - Challenge 9
+    Task: Vector2 Class
+
 */
 
+#include <stdexcept>
 #include <iostream>
 #include <string>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <vector>
 #include "Vector2.h"
 using namespace std;
 
-enum ParseStep {
-    PARSESTEP_OPENBRACKET,
-    PARSESTEP_FIRSTNUM,
-    PARSESTEP_COMMA,
-    PARSESTEP_SECONDNUM,
-    PARSESTEP_CLOSEBRACKET,
-    PARSESTEP_FINISHEDPARTS
+enum ERROR {
+    ERROR_UNKNOWN,
+    ERROR_INVALID_VECTOR,
 };
 
-bool isValidInput(string input) {
-    ParseStep parseStep = PARSESTEP_OPENBRACKET;
-    string curPart = "";
-    char lastC = ' ';
-
-    cout << "CHECKING OPENING BRACKETS" << endl;
-    for (char c : input) {
-        switch (parseStep) {
-        case PARSESTEP_OPENBRACKET:
-            // Move to next parse step
-            if (c == '[') { parseStep = PARSESTEP_FIRSTNUM; cout << "CHECKING FIRST NUM" << endl; }
-            // An invalid character
-            if (!isspace(c) && c != '[') { return false; }
-            break;
-        case PARSESTEP_FIRSTNUM:
-            // An invalid character
-            if (!isdigit(c) && !isspace(c) && c != '.' && c != ',') { return false; }
-            // Two '.' characters in a row
-            if (c == '.' && lastC == '.') { return false; }
-
-            
-            // Move to next parse step
-            if (isspace(c) && curPart != "") { parseStep = PARSESTEP_COMMA; curPart = ""; cout << "CHECKING COMMA" << endl; continue; }
-            if (c == ',' && curPart != "") { parseStep = PARSESTEP_SECONDNUM; curPart = ""; cout << "CHECKING SECOND NUM" << endl; continue; }
-            curPart += c;
-            break;
-        case PARSESTEP_COMMA:
-            // Move to next parse step
-            if (c == ',') { parseStep = PARSESTEP_SECONDNUM; curPart = ""; cout << "CHECKING SECOND NUM" << endl; }
-            // An invalid character
-            if (!isspace(c) && c != ',') { return false; }
-            break;
-        case PARSESTEP_SECONDNUM:
-            if (lastC != ',' && c == ',') { continue; }
-            // An invalid character
-            if (!isdigit(c) && !isspace(c) && c != '.' && c != ']') { return false; }
-            // Two '.' characters in a row
-            if (c == '.' && lastC == '.') { return false; }
-
-            // Move to next parse step
-            if (!isdigit(c) && c != '.' && c != ']' && curPart != "") { parseStep = PARSESTEP_CLOSEBRACKET; curPart = ""; cout << "CHECKING CLOSING BRACKET" << endl; continue; }
-            if (!isdigit(c) && c == ']' && curPart != "") { parseStep = PARSESTEP_FINISHEDPARTS; curPart = ""; cout << "CHECKING LEFTOVERS" << endl; continue; }
-            curPart += c;
-            break;
-        case PARSESTEP_CLOSEBRACKET:
-            cout << c << endl;
-            // Move to next parse step
-            if (c == ']') { parseStep = PARSESTEP_FINISHEDPARTS; curPart = ""; cout << "CHECKING LEFTOVERS" << endl; }
-            // An invalid character
-            if (!isspace(c) && c != ']') { return false; }
-            break;
-        case PARSESTEP_FINISHEDPARTS:
-            // Any non-space characters after closed bracket
-            if (!isspace(c)) { return false; }
+bool isAllowedChar(char c) {
+    vector<char> allowedChars = { '[', ',', ']', '.', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ' '};
+    for (char ac : allowedChars) {
+        if (ac == c) {
+            return true;
         }
     }
+    return false;
 }
 
 Vector2 parseInput(string input) {
-    if (!isValidInput(input)) {
-        cerr << "ERROR" << endl;
-        return Vector2(0, 0);
-    }
+    vector<char> reqSymbolComponents = { '[', ',', ']' };
+    char reqSymbol = reqSymbolComponents[0];
 
-    ParseStep parseStep = PARSESTEP_OPENBRACKET;
-    vector<string> parts = {};
-    string curPart = "";
-    char lastC = ' ';
+    bool validInput = true;
 
-    for (char c : input) {
-        switch (parseStep) {
-        case PARSESTEP_OPENBRACKET:
-            // Add to parts. Then move to next parse step
-            if (c == '[') { parts.push_back("["); parseStep = PARSESTEP_FIRSTNUM; }
-            break;
-        case PARSESTEP_FIRSTNUM:
-            // Add a 0 to the start of a number. Fe .6 would be 0.6. Then add to cur part to form whole number
-            if (c == '.' && curPart == "") { curPart += ("0" + c); }
-            // Add to cur part to form whole number
-            else if (isdigit(c) || c == '.') { curPart += c; }
+    bool seenOpenB = false;
+    bool seenComma = false;
+    bool seenCloseB = false;
+    bool seenX = false;
+    bool seenY = false;
+    bool xHasDecimal = false;
+    bool yHasDecimal = false;
 
-            // Add to parts. Then move to next parse step
-            if (isspace(c) && curPart != "" && lastC != '.') { parts.push_back(curPart); parseStep = PARSESTEP_COMMA; curPart = ""; }
-            // Add a 0 to the end of a number. Fe 5. would be 5.0. Then add to parts. Then move to next parse step
-            else if (isspace(c) && curPart != "") { curPart += "0"; parts.push_back(curPart); parseStep = PARSESTEP_COMMA; curPart = ""; }
-            if (c == ',' && curPart != "" && lastC != '.') { parts.push_back(curPart); parts.push_back(","); parseStep = PARSESTEP_SECONDNUM; curPart = ""; }
-            break;
-        case PARSESTEP_COMMA:
-            // Add to parts. Then move to next parse step
-            if (c == ',') { parts.push_back(","); parseStep = PARSESTEP_SECONDNUM; }
-            break;
-        case PARSESTEP_SECONDNUM:
-            // Add a 0 to the start of a number. Fe .6 would be 0.6. Then add to cur part to form whole number
-            if (c == '.' && curPart == "") { curPart += ("0" + c); }
-            // Add to cur part to form whole number
-            else if (isdigit(c) || c == '.') { curPart += c; }
+    string xPart = "";
+    string yPart = "";
 
-            // Add to parts. Then move to next parse step
-            if ((isspace(c) || c == ',') && curPart != "" && lastC != '.') { parts.push_back(curPart); parts.push_back("]"); parseStep = PARSESTEP_CLOSEBRACKET; continue; }
-            // Add a 0 to the end of a number. Fe 5. would be 5.0. Then add to parts. Then move to next parse step
-            else if ((isspace(c) || c == ',') && curPart != "") { curPart += "0"; parts.push_back(curPart); parts.push_back("]"); parseStep = PARSESTEP_CLOSEBRACKET; continue; }
-            break;
-        case PARSESTEP_CLOSEBRACKET:
-            continue;
-            break;
+    for (int i = 0; i < input.length(); i++) {
+        if (!validInput) { break; }
+
+        char c = input[i];
+
+        // Seeing Invalid Character
+        if (!isAllowedChar(c)) {
+            validInput = false;
+        }
+
+        // Seeing Characters Twice
+        if (c == '[' && seenOpenB) {
+            validInput = false;
+        }
+        if (c == ',' && seenComma) {
+            validInput = false;
+        }
+        if (c == ']' && seenCloseB) {
+            validInput = false;
+        }
+
+        // Seeing Characters Before They Should Appear
+        if (c == '[' && reqSymbol != '[') {
+            validInput = false;
+        }
+        if (c == ',' && reqSymbol != ',') {
+            validInput = false;
+        }
+        if (c == ']' && reqSymbol != ']') {
+            validInput = false;
+        }
+
+        // Seeing Seperators Before Seeing The Number That Goes Before : Need To See X Before ',' And Need To See Y Before ']'
+        if (c == ',' && !seenX) {
+            validInput = false;
+        }
+        if (c == ']' && !seenY) {
+            validInput = false;
+        }
+
+        // Anything Before - Allow Spaces
+        if (reqSymbol == '[' && c != '[' && !isspace(c)) {
+            validInput = false;
+        }
+        // Anything After - Allow Spaces
+        if (reqSymbolComponents.empty() && !isspace(c)) {
+            validInput = false;
+        }
+
+        if (isdigit(c)) {
+            if (!seenX && seenOpenB) {
+                seenX = true;
+                xPart += c;
+            }
+            else if (seenX && !seenComma) {
+                xPart += c;
+            }
+            if (!seenY && seenComma) {
+                seenY = true;
+                yPart += c;
+            }
+            else if (seenY) {
+                yPart += c;
+            }
+        }
+        if (c == '.') {
+            if (!seenX && seenOpenB) {
+                seenX = true;
+                xHasDecimal = true;
+                xPart += '.';
+            }
+            else if (seenX && !xHasDecimal) {
+                xHasDecimal = true;
+                xPart += '.';
+            }
+            else if (xHasDecimal && !seenComma) {
+                validInput = false;
+            }
+
+            if (!seenY && seenComma) {
+                seenY = true;
+                yHasDecimal = true;
+                yPart += '.';
+            }
+            else if (seenY && !yHasDecimal) {
+                yHasDecimal = true;
+                yPart += '.';
+            }
+            else if (yHasDecimal) {
+                validInput = false;
+            }
+        }
+        if (c == reqSymbol) {
+            reqSymbolComponents.erase(reqSymbolComponents.begin());
+            if (reqSymbolComponents.size() > 0) {
+                reqSymbol = reqSymbolComponents[0];
+            }
+            else {
+                // Acts as a filler char - Should never be in a vector, so will not matter in any of the checks above
+                reqSymbol = '@';    
+            }
+            if (c == '[') { seenOpenB = true; }
+            if (c == ',') { seenComma = true; }
+            if (c == ']') { seenCloseB = true; }
         }
     }
-
-    for (string s : parts) {
-        cout << s << endl;
+    
+    if (!validInput) {
+        throw ERROR_INVALID_VECTOR;
     }
 
-    return Vector2(0, 0);
+    float x = stof(xPart);
+    float y = stof(yPart);
+
+    return Vector2(x, y);
+}
+
+Vector2 createVector(string createRequest = "") {
+    while (true) {
+        string input = "";
+        if (createRequest != "") {
+            cout << createRequest;
+        }
+        getline(cin, input);
+        if (cin.fail()) {
+            cerr << "[!] ERROR: That is not a string." << endl;
+        }
+        else if (input == "") {
+            cerr << "[!] ERROR: That is an empty string." << endl;
+        }
+        else {
+            try {
+                Vector2 vec = parseInput(input);
+                return vec;
+            }
+            catch (const ERROR e) {
+                if (e == ERROR_INVALID_VECTOR) { cerr << "[!] ERROR: Invalid format, please use [x, y], like [3.7, 6.1]." << endl; }
+            }
+        }
+    }
+    throw ERROR_UNKNOWN;
+}
+
+void mode1() {
+    Vector2 vec1 = createVector("- Enter vector #1: ");
+    Vector2 vec2 = createVector("- Enter vector #2: ");
+    cout << endl;
+
+    cout << "Distance between [" << vec1.readX() << ", " << vec1.readY() << "] and [" << vec2.readX() << ", " << vec2.readY() << "] is " << Vector2::Distance(vec1, vec2) << "." << endl;
+}
+
+void mode2() {
+    const int UPPER_BOUND = 45;
+    const int LOWER_BOUND = -45;
+
+    Vector2 player1Pos = createVector("- Enter player #1 pos: ");
+    Vector2 viewDirectionVector = createVector("- Enter player #1's view direction: ");
+    Vector2 player2Pos = createVector("- Enter player #2 pos: ");
+    cout << endl;
+    
+    // Use cos(theta) = (A dot B) / (Mag(A) * Mag(B))
+    Vector2 positionDirectionVector = player2Pos - player1Pos;
+    float cosTheta = (Vector2::Dot(positionDirectionVector, viewDirectionVector)) / (positionDirectionVector.Magnitude() * viewDirectionVector.Magnitude());
+    float thetaRadians = acos(cosTheta);
+    float thetaDegrees = (thetaRadians * 180.0f) / M_PI;
+    
+    if (thetaDegrees >= LOWER_BOUND && thetaDegrees <= UPPER_BOUND) {
+        cout << ">> Player 2 is within Player 1's FoV." << endl;
+    }
+    else {
+        cout << ">> Player 2 is NOT within Player 1's FoV." << endl;
+    }
 }
 
 int main(int argc, char* argv[])
 {
     while (true) {
-        string input = "";
-        cout << "Enter a vector: ";
-        getline(cin, input);
-        if (cin.fail()) {
-            cerr << "ERROR: That is not a string." << endl;
-            continue;
+        cout << ">> What mode would you like to use?" << endl;
+        cout << ">> - 1. Distance between two points." << endl;
+        cout << ">> - 2. Check if one point is within view cone of another." << endl;
+        cout << "- Enter your choice: ";
+
+        string choice;
+        getline(cin, choice);
+        if (cin.fail()) { 
+            cerr << "[!] ERROR: That is not a string." << endl; 
         }
-        else if (input.empty()) {
-            cerr << "ERROR: That is an empty string." << endl;
-            continue;
+        else if (choice == "") { 
+            cerr << "[!] ERROR: That is an empty string." << endl; 
         }
-        if (!isValidInput(input)) {
-            cerr << "ERROR: That is not a valid vector." << endl;
-            continue;
+
+        string whitespaceStrippedChoice;
+        for (char c : choice) {
+            if (c != '1' && c != '2' && c != ' ') {
+                cerr << "[!] ERROR: Invalid choice." << endl;
+                choice = "";
+                break;
+            }
+            if (!isspace(c)) {
+                whitespaceStrippedChoice += c;
+            }
         }
-        else {
-            parseInput(input);
+
+        cout << endl;
+        if (whitespaceStrippedChoice == "1") {
+            cout << ">> Mode 1 selected." << endl;
+            mode1();
+            cout << endl;
+        }
+        else if (whitespaceStrippedChoice == "2") {
+            cout << ">> Mode 2 selected." << endl;
+            mode2();
+            cout << endl;
         }
     }
 }
-
-//bool seenOpenBracket = false;
-//bool seenX = false;
-//bool onX = false;
-//bool seenComma = false;
-//bool seenY = false;
-//bool onY = false;
-//bool seenCloseBracket = false;
-//char lastC = ' ';
-//for (char c : input) {
-//    if (!isdigit(c) && c != '[' && c != ']' && c != ' ' && c != ',' && c != '.') {
-//        // Seeing any non valid chars. EXAMPLE: [3, 2']
-//        return false;
-//    }
-//    else if (c != ' ' && seenCloseBracket) {
-//        // Seen any chars other than spaces after a closed bracket. EXAMPLE: [3, 2].
-//        return false;
-//    }
-//    if (c == '[') {
-//        // Seeing two opened brackets. EXAMPLE: [[5, 1] or [5, [3]
-//        if (seenOpenBracket) { return false; }
-//        // Seeing opened bracket
-//        else { seenOpenBracket = true; }
-//    }
-//    if (isdigit(c)) {
-//        // Seeing a number before opening the brackets. EXAMPLE: 1, 3]
-//        if (!seenOpenBracket) { return false; }
-//        // Going onto first number
-//        if (!seenX) { seenX = true; onX = true; }
-//        // Two seperate numbers before the comma. EXAMPLE: [1 2, 4]
-//        if (seenX && !onX && !seenComma) { return false; }
-//        // Going onto second number
-//        if (seenComma && !seenY) { seenY = true; onY = true; }
-//        // Seeing a third number
-//        if (seenX && seenY && !onY) { return false; }
-//    }
-//    if (!isdigit(c) and c != '.') {
-//        // Leaving first number
-//        if (onX) { onX = false; }
-//        // Leaving second number
-//        if (onY) { onY = false; }
-//        // Set comma status
-//        if (c == ',') { seenComma = true; }
-//        // If last seen a '.' and the next char isnt a number. EXAMPLE: [5..1, 3]
-//        if (lastC == '.') { return false; }
-//    }
-//    if (c == '.') {
-//        // Seeing a '.' outside of a number, EXAMPLE: [4, . 2]
-//        if (!onX || !onY) { return false; }
-//        if (!isdigit(lastC)) { return false; }
-//    }
-//    if (c == ',') {
-//        // Seeing a comma within a number. EXAMPLE: [7, 5,4]
-//        if (onX || onY) { return false; }
-//        // Seeing a comma before the first number [, 3, 2]
-//        if (!seenX) { return false; }
-//        // Seeing a comma after second number. EXAMPLE: [4, 3,]
-//        if (seenY) { return false; }
-//    }
-//    if (c == ']') {
-//        // Seeing closed bracket before seeing either number. EXAMPLE: [5, ]1 or []5, 1 etc
-//        if (!seenX || !seenY) { return false; }
-//        // Seeing two closed brackets. EXAMPLE: [3, 4]]
-//        if (seenCloseBracket) { return false; }
-//        // Seeing closed bracket
-//        else { seenCloseBracket = true; }
-//    }
-//    lastC = c;
-//}

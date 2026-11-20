@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <map>
 #include "structures.h"
 
 const uint16_t PLAYER_BIT_PLAYER_FOUR = 0b1 << 15;
@@ -18,6 +19,46 @@ const uint16_t DATA_BIT_DPAD_DOWN = 0b1 << 3;
 const uint16_t DATA_BIT_DPAD_RIGHT = 0b1 << 2;
 const uint16_t DATA_BIT_DPAD_UP = 0b1 << 1;
 const uint16_t DATA_BIT_DPAD_LEFT = 0b1 << 0;
+
+const std::map<uint16_t, int> bitIndexMap = {
+    { PLAYER_BIT_PLAYER_FOUR, 15 },
+    { PLAYER_BIT_PLAYER_THREE, 14 },
+    { PLAYER_BIT_PLAYER_TWO, 13 },
+    { PLAYER_BIT_PLAYER_ONE, 12 },
+    { DATA_BIT_SHOULDER_R2, 11 },
+    { DATA_BIT_SHOULDER_R1, 10 },
+    { DATA_BIT_SHOULDER_L2, 9 },
+    { DATA_BIT_SHOULDER_L1, 8 },
+    { DATA_BIT_BUTTON_Y, 7 },
+    { DATA_BIT_BUTTON_X, 6 },
+    { DATA_BIT_BUTTON_B, 5 },
+    { DATA_BIT_BUTTON_A, 4 },
+    { DATA_BIT_DPAD_DOWN, 3 },
+    { DATA_BIT_DPAD_RIGHT, 2 },
+    { DATA_BIT_DPAD_UP, 1 },
+    { DATA_BIT_DPAD_LEFT, 0 },
+};
+//
+//const int PLAYER_BIT_PLAYER_FOUR_INDEX = 15;
+//const int PLAYER_BIT_PLAYER_THREE_INDEX = 14;
+//const int PLAYER_BIT_PLAYER_TWO_INDEX = 13;
+//const int PLAYER_BIT_PLAYER_ONE_INDEX = 12;
+//const int DATA_BIT_SHOULDER_R2_INDEX = 11;
+//const int DATA_BIT_SHOULDER_R1_INDEX = 10;
+//const int DATA_BIT_SHOULDER_L2_INDEX = 9;
+//const int DATA_BIT_SHOULDER_L1_INDEX = 8;
+//const int DATA_BIT_BUTTON_Y_INDEX = 7;
+//const int DATA_BIT_BUTTON_X_INDEX = 6;
+//const int DATA_BIT_BUTTON_B_INDEX = 5;
+//const int DATA_BIT_BUTTON_A_INDEX = 4;
+//const int DATA_BIT_DPAD_DOWN_INDEX = 3;
+//const int DATA_BIT_DPAD_RIGHT_INDEX = 2;
+//const int DATA_BIT_DPAD_UP_INDEX = 1;
+//const int DATA_BIT_DPAD_LEFT_INDEX = 0;
+
+const uint16_t DATA_MASK_SHOULDER = 0b1111 << 8;
+const uint16_t DATA_MASK_BUTTON = 0b1111 << 4;
+const uint16_t DATA_MASK_DPAD = 0b1111 << 0;
 
 // Forward Declarations
 PlayerInput BitfieldToPlayerInput(const uint16_t input);
@@ -64,7 +105,7 @@ uint16_t SetBitAtPosition(const uint16_t input, int index, bool value)
         return input | (0b1 << index);
     }
     else {
-        return input & (0b0 << index);
+        return input & (~(0b1 << index));
     }
 }
 
@@ -97,16 +138,16 @@ uint16_t PlayerInputToBitfield(const PlayerInput& input)
     uint16_t result = 0b0;
     switch (input.playerIndex) {
     case 1:
-        result &= PLAYER_BIT_PLAYER_ONE;
+        result |= PLAYER_BIT_PLAYER_ONE;
         break;
     case 2:
-        result &= PLAYER_BIT_PLAYER_TWO;
+        result |= PLAYER_BIT_PLAYER_TWO;
         break;
     case 3:
-        result &= PLAYER_BIT_PLAYER_THREE;
+        result |= PLAYER_BIT_PLAYER_THREE;
         break;
     case 4:
-        result &= PLAYER_BIT_PLAYER_FOUR;
+        result |= PLAYER_BIT_PLAYER_FOUR;
         break;
     }
 

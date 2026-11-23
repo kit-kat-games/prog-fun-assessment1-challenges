@@ -56,9 +56,9 @@ const map<int, string> items = {
 
 vector<InventoryItem> inventory = {};
 
-template <typename S, typename A>
-bool isWithin(S searching, A structure) {
-    for (S s : structure) {
+template <typename S>
+bool isWithin(S searching, vector<S> vec) {
+    for (S s : vec) {
         if (searching == s) {
             return true;
         }

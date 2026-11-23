@@ -56,12 +56,18 @@ int decideTransformation(const uint16_t bitfield) {
 
     for (uint16_t playerBit : playerBits) {
         if ((bitfield | playerBit) == bitfield) {
-            if (transformation == 0) { transformation = playerBitIndexMap.at(playerBit); }
-            else { throw ERROR_MULTIPLE_PLAYER_BITS_FLIPPED; }
+            if (transformation == 0) { 
+                transformation = playerBitIndexMap.at(playerBit); 
+            }
+            else { 
+                throw ERROR_MULTIPLE_PLAYER_BITS_FLIPPED; 
+            }
         }
     }
 
-    if (transformation == 0) { throw ERROR_NO_PLAYER_BITS_FLIPPED; }
+    if (transformation == 0) { 
+        throw ERROR_NO_PLAYER_BITS_FLIPPED; 
+    }
 
     return transformation;
 }
@@ -103,20 +109,34 @@ uint16_t inputBinaryNumber() {
     uint16_t bitfield = 0b0;
     while (true) {
         getline(std::cin, input);
-        if (std::cin.fail()) { throw ERROR_FAILED_CIN; }
-        if (input == "") { throw ERROR_EMPTY_INPUT; }
-        for (char c : input) {
-            if (!isspace(c) && c != '0' && c != '1') { throw ERROR_INVALID_BITFIELD_CHARS; }
-            if (!isspace(c)) { whitespaceStrippedInput += c; }
+        if (std::cin.fail()) { 
+            throw ERROR_FAILED_CIN; 
         }
-        if (whitespaceStrippedInput.length() == 0) { throw ERROR_EMPTY_INPUT; }
-        if (whitespaceStrippedInput.length() != BITFIELD_LENGTH) { throw ERROR_INVALID_BITFIELD_LENGTH; }
+        if (input == "") { 
+            throw ERROR_EMPTY_INPUT; 
+        }
+        for (char c : input) {
+            if (!isspace(c) && c != '0' && c != '1') { 
+                throw ERROR_INVALID_BITFIELD_CHARS; 
+            }
+            if (!isspace(c)) {
+                whitespaceStrippedInput += c; 
+            }
+        }
+        if (whitespaceStrippedInput.length() == 0) { 
+            throw ERROR_EMPTY_INPUT; 
+        }
+        if (whitespaceStrippedInput.length() != BITFIELD_LENGTH) { 
+            throw ERROR_INVALID_BITFIELD_LENGTH; 
+        }
 
         try {
             bitfield = convertStringToBitfield(whitespaceStrippedInput);
             return bitfield;
         }
-        catch (const Error e) { handleError(e); }
+        catch (const Error e) { 
+            handleError(e); 
+        }
     }
 }
 
@@ -129,7 +149,9 @@ uint16_t getUserInput() {
                 return bitfield;
             }
         }
-        catch (const Error e) { handleError(e); }
+        catch (const Error e) { 
+            handleError(e); 
+        }
     }
 }
 

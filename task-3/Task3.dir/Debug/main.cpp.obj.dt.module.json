@@ -3,7 +3,7 @@
     "revision": 0,
     "rules": [
         {
-            "primary-output": "Task3.dir\\Debug\\main.cpp.obj.dt.obj",
+            "primary-output": "Task3.dir\\Debug\\main.obj",
             "outputs": [
                 "Task3.dir\\Debug\\main.cpp.obj.dt.module.json",
                 "Task3.dir\\Debug\\main.cpp.obj.dt.d.json"

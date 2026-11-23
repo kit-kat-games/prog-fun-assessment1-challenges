@@ -52,18 +52,22 @@ int takeNumInput() {
         if (!validInput || !seenNum) {
             cout << "ERROR: That is not an integer." << endl;
             input = "";
+            continue;
         }
-        else {
-            string numString;
-            for (char c : input) {
-                if (isdigit(c)) { numString += c; }
+
+        string numString;
+        for (char c : input) {
+            if (isdigit(c)) { 
+                numString += c; 
             }
-            inputNum = stoi(numString);
-            if (seenMinusSign) { inputNum *= -1; }
-            if (inputNum < LOWER_BOUND || inputNum > UPPER_BOUND) {
-                cerr << "ERROR: That number is out of bounds." << endl;
-                input = "";
-            }
+        }
+        inputNum = stoi(numString);
+        if (seenMinusSign) { 
+            inputNum *= -1; 
+        }
+        if (inputNum < LOWER_BOUND || inputNum > UPPER_BOUND) {
+            cerr << "ERROR: That number is out of bounds." << endl;
+            input = "";
         }
     } while (input == "");
     return inputNum;

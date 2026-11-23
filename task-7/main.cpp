@@ -85,10 +85,14 @@ int getShopItemChoice(string inputRequest) {
         else {
             string numString;
             for (char c : input) {
-                if (isdigit(c)) { numString += c; }
+                if (isdigit(c)) { 
+                    numString += c; 
+                }
             }
             chosenItemNumber = stoi(numString);
-            if (seenMinusSign) { chosenItemNumber *= -1; }
+            if (seenMinusSign) { 
+                chosenItemNumber *= -1; 
+            }
             if (chosenItemNumber < 1 || chosenItemNumber > shopItems.size()) {
                 cerr << "ERROR: Please choose a valid item number." << endl;
                 input = "";

@@ -12,6 +12,7 @@ public:
 		x = v.x;
 		y = v.y;
 	}
+
 	float readX() { return x; }
 	float readY() { return y; }
 

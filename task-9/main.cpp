@@ -51,48 +51,26 @@ Vector2 parseInput(string input) {
         char c = input[i];
 
         // Seeing Invalid Character
-        if (!isAllowedChar(c)) {
-            validInput = false;
-        }
+        if (!isAllowedChar(c)) { validInput = false; }
 
         // Seeing Characters Twice
-        if (c == '[' && seenOpenB) {
-            validInput = false;
-        }
-        if (c == ',' && seenComma) {
-            validInput = false;
-        }
-        if (c == ']' && seenCloseB) {
-            validInput = false;
-        }
+        if (c == '[' && seenOpenB) { validInput = false; }
+        if (c == ',' && seenComma) { validInput = false; }
+        if (c == ']' && seenCloseB) { validInput = false; }
 
         // Seeing Characters Before They Should Appear
-        if (c == '[' && reqSymbol != '[') {
-            validInput = false;
-        }
-        if (c == ',' && reqSymbol != ',') {
-            validInput = false;
-        }
-        if (c == ']' && reqSymbol != ']') {
-            validInput = false;
-        }
+        if (c == '[' && reqSymbol != '[') { validInput = false; }
+        if (c == ',' && reqSymbol != ',') { validInput = false; }
+        if (c == ']' && reqSymbol != ']') { validInput = false; }
 
         // Seeing Seperators Before Seeing The Number That Goes Before : Need To See X Before ',' And Need To See Y Before ']'
-        if (c == ',' && !seenX) {
-            validInput = false;
-        }
-        if (c == ']' && !seenY) {
-            validInput = false;
-        }
+        if (c == ',' && !seenX) { validInput = false; }
+        if (c == ']' && !seenY) { validInput = false; }
 
         // Anything Before - Allow Spaces
-        if (reqSymbol == '[' && c != '[' && !isspace(c)) {
-            validInput = false;
-        }
+        if (reqSymbol == '[' && c != '[' && !isspace(c)) { validInput = false; }
         // Anything After - Allow Spaces
-        if (reqSymbolComponents.empty() && !isspace(c)) {
-            validInput = false;
-        }
+        if (reqSymbolComponents.empty() && !isspace(c)) { validInput = false; }
 
         if (isdigit(c)) {
             if (!seenX && seenOpenB) {
@@ -120,9 +98,7 @@ Vector2 parseInput(string input) {
                 xHasDecimal = true;
                 xPart += '.';
             }
-            else if (xHasDecimal && !seenComma) {
-                validInput = false;
-            }
+            else if (xHasDecimal && !seenComma) { validInput = false; }
 
             if (!seenY && seenComma) {
                 seenY = true;
@@ -133,9 +109,7 @@ Vector2 parseInput(string input) {
                 yHasDecimal = true;
                 yPart += '.';
             }
-            else if (yHasDecimal) {
-                validInput = false;
-            }
+            else if (yHasDecimal) { validInput = false; }
         }
         if (c == reqSymbol) {
             reqSymbolComponents.erase(reqSymbolComponents.begin());
@@ -181,7 +155,9 @@ Vector2 createVector(string createRequest = "") {
                 return vec;
             }
             catch (const ERROR e) {
-                if (e == ERROR_INVALID_VECTOR) { cerr << "[!] ERROR: Invalid format, please use [x, y], like [3.7, 6.1]." << endl; }
+                if (e == ERROR_INVALID_VECTOR) { 
+                    cerr << "[!] ERROR: Invalid format, please use [x, y], like [3.7, 6.1]." << endl; 
+                }
             }
         }
     }

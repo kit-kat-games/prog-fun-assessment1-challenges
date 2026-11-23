@@ -51,52 +51,82 @@ The input parsing employed in the Data Collection step took a few iterations of 
 Learning:
 This task has allowed me to understand how cin, input parsing and error checking works within a program, as well as the difficulties encountered in doing so. The solutions I designed within this program will likely be very helpful in reusing them within further tasks inside this assessment, my tutorials, and any other c++ projects. I also imagine a similar solution to input parsing could be applied to Task 8 where parsing a command for correct syntax within its command and variables is very important for proper function.
 
+
 Challenge 3 - Reflection
 Context:
+This challenge asks me to build a short program where the user inputs a number value, (allowing input of floats and signed numbers). It will then use input checking to ensure the inputted value is valid, and if not, a std::cerr descriptive error message will be output (std::cerr being similar to std::cout, but associated with the standard error stream of C), and a custom error code will be returned. Should a valid input be provided, a variety of values based on this input will be shown to the user (for example, negation, square, rounded values). Due to the similar input parsing within Challenge 2, I was prepared for doing the same process as that assessment's unsigned int checking, but extending the functionality to signed float checking. While this would likely take a little work to cover all edge cases, I did not expect it to be too difficult, and the second part of the problem (calculating and display of values), was not very difficult due to the inbuilt functions within c++.
 
 Action:
+This problem was broken down into two steps, input parsing and the data manipulation to display steps, however due to the inbuilt c++ functions, it was realistically only the input parsing step. I used the same approach as assessment 2, with storing the user's input within a string temp variable, looping through each character in their input, and using Booleans and if/else if statements to ensure the formatting of the input is correct. Due to the added allowance of signed values and floats, this parsing was more complicated, including making separate Boolean values for whether the whole and fractional parts of the number have been seen, and ensuring everything is within the correct order, being:
+(optional) Negation/Minus Sign
+(optional*) Whole Part of Number
+(optional*) Decimal Point
+(optional*) Fractional Part of Number
+
+Each part is technically optional, due to me allowing difference in input formatting to allow the user some leeway. This includes that they may not impact a signed value or a float, where only a whole part is needed. However, should a float value be inputted, I decided to allow the following input formats to be read, and allowed through the input parsing:
+.7 -> 0.7
+1. -> 1.0
+-.36 -> -0.36
+-87. -> -87.0
+These formats are readable as said float values, but required specifically storing Booleans on whether its part has been seen (for example, if a decimal point is seen, with no number before), and if not, the left-out '0' character, will be filled in.
 
 Results:
+Due to the pre-established input parsing system, this approach worked in only a few iterations of ensuring the parsing order of the float elements was correct. I worked through this with a variety of different values in different formats, where the program worked as expected, providing each input with its proper values.
 
 Learning:
+This task has allowed me to refine my understanding of the importance and processing of input parsing within a system that needs user input. The program I have developed here will be helpful for acting as a library input parsing system, where I can use it's functionality to make preset functions for accepting ints or floats, unsigned or signed values, or even multiple different ways of formatting number inputs, such as through the vector input parsing within later assessments, or in a command menu system from Task 8, where inputted numbers act as arguments, and must be filtered through. This will also be an important skill for any project where input validation and manipulation is used, which all games do in some way.
 
 
 Challenge 4 - Reflection
 Context:
+This challenge involved designing a program that prompts the user for a string input with the use of standard input methods, and then formatting said input within box ASCII art, with each character separated into individual squares, surrounded by a box with alternating symbols. Should an incorrect input be given, appropriate error messages will be provided for the user, and they will be reprompted for a new input. Once each ASCII art is printed, a new input will be prompted for. This is the first task that asks us to generate our own form of ASCII art, which will be important for applying onto our Assessment 2, and any other text-based games.
 
 Action:
+This problem requires the same input parsing method of Challenge 2, so I used the same code, as it is well tested from that task. Due to just needing a string input, there is little filtering that needs to be done through this input, other than ensuring the user has inputted at least one non-space character (while still allowing for spaces to be shown within the box art. In order to generate the box ASCII art, I used a for loop, with a number of iterations equal to the size/length of the inputted string, giving each char a space within the box. This involved making a top/bottom string, with a number of "=-=-=" strings for each char in the string, connected by '+' characters. This will be placed around a middle string, with each character tabulated by '|' characters, with spaces between, fe "| h | e | l | l | o |   | w | o | r | l | d |". The use of a for loop is the simplest and likely most efficient solution to this problem, which I was comfortable with due to previous uses in other programming languages and within this module's lectures/tutorials.
 
 Results:
+This approach solved the problem with no issues, which is as expected.
 
 Learning:
-
+This problem has allowed me to understand some of the basics of generating ASCII art for text based games, which will assist me in the future for my Assessment 2. 
 
 Challenge 5 - Reflection
 Context:
+This task involves developing a program that will take a string input from the user, and display it in the forms of the following text cases:
+Lowercase, Uppercase. Sentence Case, Alternating Case
+It also involves parsing the given input to ensure that there is at least one alphabetical character, while still allowing for whitespace within the text to be allowed, as well as numbers. Should an invalid input be given, a warning will be produced. The application of these cases will use the built in c++ functions toupper(char) and tolower(char) in order to produce the expected outputs. It was my first time working with these functions, so I had to work out how to apply them on a whole word, as they are designed for only being used on characters.
 
 Action:
+This problem involved the three parts, being data input/parsing, input manipulation, and case output. The case output involves simple std::cout statements and the string input/parsing takes into use the same functionality of string parsing in the previous tasks. For the input manipulation stage, I used a set of for loops for each case, with a loop over each character within the string. For the upper and lower case cases, it involved simply setting the character to its toupper(c) or tolower(c) value. For the alternating case, I kept track of a Boolean for whether the last character was uppercase, if it was, the current character would be set to tolower(c). Finally, for the sentence case, I kept track of every time a terminating type of punctuation was used, ('.', '?', '!') with a Boolean value. When they are seen, the Boolean is set to true. Then the next alphabetical character seen will be set to toupper(c), and the remaining chars of the sentence (until the next terminating symbol) would be tolower(c). This Boolean also began set as true, so the first character given would be set toupper(c). The use of a for loop over the characters of the string is the simplest, and most efficient way to work with the toupper(char) and tolower(char) functions, which were supplied and suggested by both the task, and a lecture.
 
 Results:
+The use of the for loops worked as expected, with no issues in the execution and getting the expected results. I tested this using a few forms of invalid input, including inputs with nothing in the string, inputs with only spaces, and inputs with only digits and/or symbols. These cases were all handled as expected and provided a warning in response. I then used a variety of different sentences with different punctuation and word length or counts, and the solution functions correctly in all cases.
 
 Learning:
-
+This task has been helpful in learning the simplest way to apply these cases to the words, which is important within my Assessment 2, as well as any text-based programs and games. This is due to the user not always providing values in expected cases, meaning converting to the format of string we wish to work with in the backend, or output back to the user, is important. These for loops could be built into a custom 'library' header file within a text based game, in order to make an easy macro/solution for applying these cases on strings.
 
 Challenge 6 - Reflection
 Context:
+This challenge involves a program where the user is prompted for a number between 0-100, and their guess is compared against a randomly generated number within this range. The user is then provided feedback (in the form of a 'hotness' scale, such as freezing for far away, and hot for closer) based on their guess, and allowed to guess a new number. This program will run until the correct number is chosen, where the program will tell the user what the number is, and how many guesses it took them to get to this point. This will involve user input similar to prior tasks, as well as some arithmetic for differentiating the difference between the provided and generated numbers.
 
 Action:
+This problem was broken down into three steps, user input (which involved an integer input parsing method like prior tasks, while also checking at the end of the parsing process whether the number is between 0-100, and if not, it is treated as an invalid input with proper feedback), difference calculation and user feedback. This difference calculation involved doing (generated_num - guessed_num), and then applying the absolute value function to the result. This is due to not caring whether we are 5 above, or below the generated number, but simply caring about the distance between the two itself. I then fed this difference into a function with a series of if / else if statements, where different boundaries of difference are checked, and then the appropriate feedback message is outputted using std::cout. The user is then allowed to input a value again. The randomly generated number was produced using the provided header file, using a function called random(lowerBound, upperBound) and producing a value between, inclusively. The game also worked within a pseudo-'gameplay loop', with a Boolean value of whether the gameWon, and if not, the program continues for another guessing iteration. Once the correct guess is given, said while loop will terminate, allowing the program to end.
 
 Results:
+This solution worked correctly, with the input parsing method being the only complicated thing within the program, that is already quite dependable due to prior use.
 
 Learning:
-
+The use of a header file in a way that you would use a library file allowed me to strengthen my capability and comfort with using functions this way. The use of a 'gameplay loop' designated by a gameRunning/gameWon variable is also a tool that will likely be used in a decent amount of lower level games not within a game engine, where an update cycle must be hard coded. This allows me to more understand how to do so, should I need to use this tool again in another project.
 
 Challenge 7 - Reflection
 Context:
+This challenge involves allowing the user to create 3 players that successively buy items from an in-game shop, with a basic representation of character creation, purchasing and currency. This will involve needing a way to store data about the possible shop items that are purchasable, such as their name, type, price, damage and character role. Alongside this, proper formatting of the purchased items, allowance of the player to change their mind about their activity in the shop and restart that procedure, as well as robust input for giving unique player names, and choosing shop items will be important.
 
 Action:
+The first part of this challenge, name inputting, involved 3 separate string input parsers, implemented in the same way as prior tasks. A welcome message is then produced, with it being formatted to include the player's names within this text....
 
 Results:
+
 
 Learning:
 
@@ -104,9 +134,12 @@ Learning:
 Challenge 8 - Reflection
 Context:
 
+
 Action:
 
+
 Results:
+
 
 Learning:
 
@@ -114,9 +147,12 @@ Learning:
 Challenge 9 - Reflection
 Context:
 
+
 Action:
 
+
 Results:
+
 
 Learning:
 
@@ -124,8 +160,11 @@ Learning:
 Challenge 10 - Reflection
 Context:
 
+
 Action:
 
+
 Results:
+
 
 Learning:

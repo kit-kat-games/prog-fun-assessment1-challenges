@@ -10,7 +10,8 @@
 #include <string>
 using namespace std;
 
-const int ERROR_STRING_INPUT = -1;
+const int ERROR_STRING_INPUT = 1;
+const int ERROR_INVALID_NUMBER = 2;
 
 int main(int argc, char* argv[])
 {
@@ -33,7 +34,11 @@ int main(int argc, char* argv[])
         // If already proven invalid, do not need to check any further characters
         if (!validInput) { continue; }
         // If any invalid characters within
-        else if (!isdigit(c) && !isspace(c) && c != '-' && c != '.') { validInput = false; }
+        else if (!isdigit(c) && !isspace(c) && c != '-' && c != '.') { 
+            validInput = false; 
+            cerr << "ERROR: Invalid input. That is a string, not a number." << endl;
+            return ERROR_STRING_INPUT;
+        }
         // If any digits present after the number finishes
         else if (isdigit(c) && seenNum && !onNum) { validInput = false; }
         // If multiple decimal points present
@@ -65,8 +70,8 @@ int main(int argc, char* argv[])
 
 
     if (!validInput || !seenNum) {
-        cout << "ERROR: That is not a valid number." << endl;
-        return ERROR_STRING_INPUT;
+        cout << "ERROR: Invalid Input. That is not a valid number." << endl;
+        return ERROR_INVALID_NUMBER;
     }
     else {
         string numString;
@@ -78,21 +83,8 @@ int main(int argc, char* argv[])
         x = stof(numString);
         if (seenMinusSign) { x *= -1; }
     }
-    //cout << "Please enter your chosen number (x): ";
 
-    //// Check whether the inputted data was valid
-    //if (!(cin >> x)) {
-    //    // If a non number value is entered, give an error message
-    //    cout << "ERROR: You entered a string, this is not a valid number." << endl;
-    //    // Clear the bad state
-    //    cin.clear();
-    //    // Ignore the rest of the line
-    //    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    //    // Return the relevant error
-    //    return ERROR_STRING_INPUT;
-    //}
-
-    // Calculate following metrics
+    // Calculate and display the following metrics
     cout << "Negation of x: " << -x << endl;
     cout << "Absolute Value of x: " << abs(x) << endl;
     cout << "Square of x: " << pow(x,2) << endl;

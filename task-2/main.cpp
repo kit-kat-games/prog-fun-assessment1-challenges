@@ -25,10 +25,17 @@ int main(int argc, char* argv[])
         // Take input from user
         getline(cin, playerName);
         // If empty string, give error message
-        if (playerName == "") { cout << "Please enter a non-empty string." << endl; continue; }
+        if (playerName == "") { 
+            cout << "Please enter a non-empty string." << endl; 
+            continue; 
+        }
         // Check each character, if any are not a space, allow the input.
         bool noNonSpaceChars = true;
-        for (char c : playerName) { if (!isspace(c)) { noNonSpaceChars = false; } }
+        for (char c : playerName) { 
+            if (!isspace(c)) 
+            { noNonSpaceChars = false; 
+            } 
+        }
         // If all the characters are spaces, give error message
         if (noNonSpaceChars) {
             cout << "Please enter a string with at least 1 non-space character." << endl;
@@ -41,9 +48,16 @@ int main(int argc, char* argv[])
     do {
         cout << "Please enter your username: ";
         getline(cin, playerUsername);
-        if (playerUsername == "") { cout << "Please enter a non-empty string." << endl; continue; }
+        if (playerUsername == "") { 
+            cout << "Please enter a non-empty string." << endl; 
+            continue; 
+        }
         bool noNonSpaceChars = true;
-        for (char c : playerUsername) { if (!isspace(c)) { noNonSpaceChars = false; } }
+        for (char c : playerUsername) { 
+            if (!isspace(c)) { 
+                noNonSpaceChars = false; 
+            } 
+        }
         if (noNonSpaceChars) {
             cout << "Please enter a string with at least 1 non-space character." << endl;
             playerUsername = "";
@@ -54,9 +68,16 @@ int main(int argc, char* argv[])
     do {
         cout << "Please enter your clan tag: ";
         getline(cin, playerClanTag);
-        if (playerClanTag == "") { cout << "Please enter a non-empty string." << endl; continue; }
+        if (playerClanTag == "") { 
+            cout << "Please enter a non-empty string." << endl; 
+            continue; 
+        }
         bool noNonSpaceChars = true;
-        for (char c : playerClanTag) { if (!isspace(c)) { noNonSpaceChars = false; } }
+        for (char c : playerClanTag) { 
+            if (!isspace(c)) { 
+                noNonSpaceChars = false; 
+            } 
+        }
         if (noNonSpaceChars) {
             cout << "Please enter a string with at least 1 non-space character." << endl;
             playerClanTag = "";

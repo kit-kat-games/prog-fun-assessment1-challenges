@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "Task9.dir\\Debug\\corecrt_math_defines.h.obj.dt.obj",
+            "outputs": [
+                "Task9.dir\\Debug\\corecrt_math_defines.h.obj.dt.module.json",
+                "Task9.dir\\Debug\\corecrt_math_defines.h.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

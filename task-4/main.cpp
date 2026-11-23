@@ -18,17 +18,33 @@ void doASCIIBoxArt() {
     // In this case, we do not allow the user to stop inputting text until they enter a valid expected
     // string
     do {
+        // Promput user for data
         cout << " - Please enter some text: ";
-        // Must use getline as otherwise, should the operator simply press enter, cin will enter an
-        // error state where further reads will not be valid and will not occur - This is the simplest
-        // way to avoid this
+        // Take input from user
         getline(cin, inputtedText);
         if (cin.fail()) {
             cerr << "ERROR: That is not a string." << endl;
+            continue;
         }
-        else if (inputtedText.empty()) {
+        // If empty string, give error message
+        if (inputtedText == "") { 
             cerr << "ERROR: That is an empty string." << endl;
+            continue; 
         }
+
+        // Check each character, if any are not a space, allow the input.
+        bool noNonSpaceChars = true;
+        for (char c : inputtedText) { 
+            if (!isspace(c)) { 
+                noNonSpaceChars = false; 
+            } 
+        }
+        // If all the characters are spaces, give error message
+        if (noNonSpaceChars) {
+            cout << "Please enter a string with at least 1 non-space character." << endl;
+            inputtedText = "";
+        }
+        // Repeat until valid input given
     } while (inputtedText == "");
 
     // Abstracting and representing the line and string data for better in program formatting

@@ -12,8 +12,9 @@ public:
 		x = v.x;
 		y = v.y;
 	}
-	float readx() { return x; }
-	float ready() { return y; }
+
+	float readX() { return x; }
+	float readY() { return y; }
 
 	// A suitable copy-assignment overload for assigning a Vector2 instance to another.í
 	Vector2& operator = (Vector2& other) {

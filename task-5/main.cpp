@@ -17,21 +17,22 @@ void doTextCasing() {
         getline(cin, inputtedText);
         if (cin.fail()) {
             cerr << "ERROR: That is not a string." << endl;
+            continue;
         }
         else if (inputtedText.empty()) {
             cerr << "ERROR: That is an empty string." << endl;
+            continue;
         }
-        else {
-            bool noAlphabetical = true;
-            for (char letter : inputtedText) {
-                if (isalpha(letter)) {
-                    noAlphabetical = false;
-                }
+
+        bool noAlphabetical = true;
+        for (char letter : inputtedText) {
+            if (isalpha(letter)) {
+                noAlphabetical = false;
             }
-            if (noAlphabetical) {
-                cerr << "ERROR: Can't run text casing, there is no alphabetical characters in the input string." << endl;
-                inputtedText = "";
-            }
+        }
+        if (noAlphabetical) {
+            cerr << "ERROR: Can't run text casing, there is no alphabetical characters in the input string." << endl;
+            inputtedText = "";
         }
     } while (inputtedText == "");
 

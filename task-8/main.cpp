@@ -294,10 +294,14 @@ void initializeInventorySize() {
         else {
             string numString;
             for (char c : input) {
-                if (isdigit(c)) { numString += c; }
+                if (isdigit(c)) { 
+                    numString += c; 
+                }
             }
             size = stoi(numString);
-            if (seenMinusSign) { size *= -1; }
+            if (seenMinusSign) { 
+                size *= -1; 
+            }
             if (size < 1 || size > INVENTORY_SIZE_LIMIT) {
                 cerr << " [!] ERROR: Invalid inventory size. Please choose a size between 1 and " << int(INVENTORY_SIZE_LIMIT) << "." << endl;
                 input = "";

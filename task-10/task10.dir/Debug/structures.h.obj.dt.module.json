@@ -3,7 +3,7 @@
     "revision": 0,
     "rules": [
         {
-            "primary-output": "task10.dir\\Debug\\structures.h.obj.dt.obj",
+            "primary-output": "task10.dir\\Debug\\structures.obj",
             "outputs": [
                 "task10.dir\\Debug\\structures.h.obj.dt.module.json",
                 "task10.dir\\Debug\\structures.h.obj.dt.d.json"

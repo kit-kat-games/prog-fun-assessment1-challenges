@@ -38,23 +38,6 @@ const std::map<uint16_t, int> bitIndexMap = {
     { DATA_BIT_DPAD_UP, 1 },
     { DATA_BIT_DPAD_LEFT, 0 },
 };
-//
-//const int PLAYER_BIT_PLAYER_FOUR_INDEX = 15;
-//const int PLAYER_BIT_PLAYER_THREE_INDEX = 14;
-//const int PLAYER_BIT_PLAYER_TWO_INDEX = 13;
-//const int PLAYER_BIT_PLAYER_ONE_INDEX = 12;
-//const int DATA_BIT_SHOULDER_R2_INDEX = 11;
-//const int DATA_BIT_SHOULDER_R1_INDEX = 10;
-//const int DATA_BIT_SHOULDER_L2_INDEX = 9;
-//const int DATA_BIT_SHOULDER_L1_INDEX = 8;
-//const int DATA_BIT_BUTTON_Y_INDEX = 7;
-//const int DATA_BIT_BUTTON_X_INDEX = 6;
-//const int DATA_BIT_BUTTON_B_INDEX = 5;
-//const int DATA_BIT_BUTTON_A_INDEX = 4;
-//const int DATA_BIT_DPAD_DOWN_INDEX = 3;
-//const int DATA_BIT_DPAD_RIGHT_INDEX = 2;
-//const int DATA_BIT_DPAD_UP_INDEX = 1;
-//const int DATA_BIT_DPAD_LEFT_INDEX = 0;
 
 const uint16_t DATA_MASK_SHOULDER = 0b1111 << 8;
 const uint16_t DATA_MASK_BUTTON = 0b1111 << 4;

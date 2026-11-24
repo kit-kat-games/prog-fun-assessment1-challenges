@@ -172,31 +172,42 @@ uint16_t player2Transformation(uint16_t bitfield) {
 
 uint16_t player3Transformation(uint16_t bitfield) {
     // DOWN-RIGHT-UP-LEFT -> Counter Clockwise would be LEFT-DOWN-RIGHT-UP -> Right Shift 1, grabbing Left bit and appplying to where Down currently is
+    // Extract DPad Bits
     uint16_t dpadBits = bitfield & DATA_MASK_DPAD;
     uint16_t bitfieldWithoutDpadBits = bitfield & ~DATA_MASK_DPAD;
 
+    // Shift bits right by 1, and set the value that was at DPAD_LEFT to where DPAD_DOWN was (its new position)
     bool dpaLeftSet = (bitfield | DATA_BIT_DPAD_LEFT) == bitfield;
     dpadBits = dpadBits >> 1;
     dpadBits = SetBitAtPosition(dpadBits, bitIndexMap.at(DATA_BIT_DPAD_DOWN), dpaLeftSet);
+	// Remove any bits outside of the DPad range after shifting
     dpadBits &= DATA_MASK_DPAD;
 
+	// Apply the modified DPad bits back to the bitfield
     bitfield = bitfieldWithoutDpadBits | dpadBits;
 
     // Invert all bits in shoulderBits range
+	// Extract Shoulder Bits
     uint16_t shoulderBits = bitfield & DATA_MASK_SHOULDER;
     uint16_t bitfieldWithoutShoulderBits = bitfield & ~DATA_MASK_SHOULDER;
 
+    // Invert these bits
     uint16_t shoulderBitsInverted = ~shoulderBits;
+	// Remove bits outside of the Shoulder range after inverting (they were all 0 after first mask operation, were flipped to 1 with inversion, and are flipped back here)
     shoulderBitsInverted &= DATA_MASK_SHOULDER;
 
+	// Apply the modified Shoulder bits back to the bitfield
     bitfield = bitfieldWithoutShoulderBits | shoulderBitsInverted;
 
     return bitfield;
 }
 
 uint16_t swapBits(uint16_t bitfield, int bitIndexA, int bitIndexB) {
+	// Store current values of the bits at the specified indexes
     bool bitASet = SetBitAtPosition(bitfield, bitIndexA, true) == bitfield;
     bool bitBSet = SetBitAtPosition(bitfield, bitIndexB, true) == bitfield;
+
+    //
     bitfield = SetBitAtPosition(bitfield, bitIndexA, bitBSet);
     bitfield = SetBitAtPosition(bitfield, bitIndexB, bitASet);
     return bitfield;

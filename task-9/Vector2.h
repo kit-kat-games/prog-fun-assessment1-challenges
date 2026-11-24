@@ -3,6 +3,7 @@
 class Vector2
 {
 public:
+	// A constructor for constructing a Vector2 instance from two float values.
 	Vector2(float _x, float _y) {
 		x = _x;
 		y = _y;
@@ -13,18 +14,19 @@ public:
 		y = v.y;
 	}
 
-	float readX() { return x; }
-	float readY() { return y; }
+	// Vector2 data
+	float x;
+	float y;
 
 	// A suitable copy-assignment overload for assigning a Vector2 instance to another.í
 	Vector2& operator = (Vector2& other) {
-		std::swap(x, other.x);
-		std::swap(y, other.y);
+		x = other.x;
+		y = other.y;
 		return *this;
 	}
 	Vector2 operator = (Vector2 other) {
-		std::swap(x, other.x);
-		std::swap(y, other.y);
+		x = other.x;
+		y = other.y;
 		return *this;
 	}
 
@@ -45,33 +47,29 @@ public:
 	{
 		return Vector2(-x, -y);
 	}
+	
+	// A method Vector2.Magnitude() to compute the magnitude of the Vector2 instance.
+	float Magnitude() {
+		return sqrtf(powf(x, 2) + powf(y, 2));
+	}
+	// A method Vector2.Normalize() to normalize the Vector2 instance.
+	void Normalize() {
+		x /= Magnitude();
+		y /= Magnitude();
+	}
+	// A method Vector2.Normalized() to return a normalized copy of the Vector2 instance.
+	Vector2 Normalized() {
+		return Vector2(x / Magnitude(), y / Magnitude());
+	}
+
 	// A static method Vector2::Dot which computes the dot product of two Vector2 instances.
 	static float Dot(Vector2 v1, Vector2 v2) {
 		return v1.x * v2.x + v1.y * v2.y;
 	}
-	// A method Vector2.Magnitude() to compute the magnitude of the Vector2 instance.
-	float Magnitude() {
-		return sqrtf(pow(x, 2) + pow(y, 2));
-	}
-	// A method Vector2.Normalize() to normalize the Vector2 instance.
-	void Normalize() {
-		if (x < 0) { x = -x; }
-		if (y < 0) { y = -y; }
-	}
-	// A method Vector2.Normalized() to return a normalized copy of the Vector2 instance.
-	Vector2 Normalized() {
-		float nx;
-		float ny;
-		if (x < 0) { nx = -x; }
-		if (y < 0) { ny = -y; }
-		return Vector2(nx, ny);
-	}
+	// A static method Vector2::Distance which computes the distance between two Vector2 instances.
 	static float Distance(Vector2 v1, Vector2 v2) {
 		float xdist = v2.x - v1.x;
 		float ydist = v2.y - v1.y;
-		return sqrtf(pow(xdist, 2) + pow(ydist, 2));
+		return sqrtf(powf(xdist, 2) + powf(ydist, 2));
 	}
-private:
-	float x;
-	float y;
 };

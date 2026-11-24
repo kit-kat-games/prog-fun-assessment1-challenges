@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     if (seenDecimalPoint && !seenNumFractPart) { fillFractPartWithZero = true; }
 
 
-    if (!validInput || !seenNum) {
+    /*if (!validInput || !seenNum) {
         cout << "ERROR: Invalid Input. That is not a valid number." << endl;
         return ERROR_INVALID_NUMBER;
     }
@@ -82,7 +82,20 @@ int main(int argc, char* argv[])
         if (fillFractPartWithZero) { numString += '0'; }
         x = stof(numString);
         if (seenMinusSign) { x *= -1; }
-    }
+    }*/
+
+    /*try {
+		x = stof(input);
+
+	}
+	catch (const std::invalid_argument& e) {
+		cerr << "ERROR: Invalid Input. That is not a valid number." << endl;
+		return ERROR_INVALID_NUMBER;
+	}
+	catch (const std::out_of_range& e) {
+		cerr << "ERROR: Invalid Input. That number is too large." << endl;
+		return ERROR_INVALID_NUMBER;
+	}*/
 
     // Calculate and display the following metrics
     cout << "Negation of x: " << -x << endl;

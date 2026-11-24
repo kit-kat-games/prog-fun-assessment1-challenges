@@ -150,16 +150,20 @@ This problem allowed me to apply my standard and robust parsing methods into a m
 
 Challenge 9 - Reflection
 Context:
-
+This challenge involved creating a custom class to represent a Vector2, with methods to compute information from it including its Magnitude, the Distance between 2 vectors, the Dot Product of 2 vectors and more. This is done through standard class methods, as well as the application of operator overloads, constructors, and static methods to extend the functionality of the class.
 
 Action:
+The first step of this challenge was to populate the methods within the Vector2 class. This included the standard methods for returning the Magnitude of the vector, or returning a Normalized copy of the vector/normalizing that instance of the vector (Normalizing is the process of keeping the direction, but setting the distance of the vector to 1). This then extends to the static methods, which can be called with Vector2::Distance(v1, v2). This allows these functions to be called without a Vector2 object to perform the function calls in, I learnt the syntax of this through research for my Assessment 2, where I originally used classes with static methods for handling the TextOutput and TextInput functions. Next, I worked on the application of a copy constructor for constructing a Vector2 instance from another, this involves passing the constructor a Vector2 by reference and setting the new Vector2's data to that of the passed Vector2. This is a constructor type that most c++ classes have in-built, as it allows for streamlining the creation of a new instance without reading every piece of data individually where it is being created externally to the class structure.
 
+Next I designed the copy-assignment overload, this involves being passed a Vector2 instance (either by value or reference), and then setting this instance's x and y values to that of the others, before returning the instance itself (through return *this). I learnt this syntax through research into stack overflow, as these concepts are more complex. This allows custom control of how the Vector2 class interacts with being set as another Vector2 (thisVector = otherVec), which can be important as a class may have objects that need deleting or moving when set to another value in this way. This is applied similarly in the operator overloads for adding, subtracting, multiplying and unary negation, where I adapted stack overflow code as well as referenced learncpp.com for the syntax required. This custom control is important especially for a Vector2, being a mathematical object that will likely be used in math computations.
+
+Finally, the rest of the problem dictated having a console with two modes, being calculated the distance between two inputted vectors, or having 3 vector2 inputs, with a calculation for whether a player1, given a certain look direction, could view another player2. The first step of both of these was input parsing to allow converting the player input into a Vector2 instance. This involved a similar process to the int and string parsing in prior challenges, as well as the command-syntax parsing in the prior task. 
 
 Results:
 
 
 Learning:
-
+The use of static methods within a class has allowed me to refine my understanding and use of them, as well as understand where they would be best to be used within another project, such as when we need to do functions relating to an object without having an instance of it in the first place (for example in this case, there could be a static function that returns a Vector2 that passes through two points), this allows us to keep the logic within the Vector2 class which improves consistency and usability.
 
 Challenge 10 - Reflection
 Context:
